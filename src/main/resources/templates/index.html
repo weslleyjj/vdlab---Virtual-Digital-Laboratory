@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tela inicial TadsLab</title>
+</head>
+<body>
+<h1>Tela inicial do tadslab</h1>
+<form method="post" th:action="@{/upload}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".sof" placeholder="Anexe o arquivo .sof" required>
+    <button type="submit">Enviar arquivo</button>
+</form>
+</body>
+</html>

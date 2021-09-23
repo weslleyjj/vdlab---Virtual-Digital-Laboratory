@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback - FPGA</title>
+    <script src="/libs/jquery.min.js" rel="script" type="text/javascript"></script>
+    <script src="/app.js" rel="script" type="text/javascript"></script>
+    <script src="/libs/sockjs.min.js" rel="script" type="text/javascript"></script>
+    <script src="/libs/stomp.min.js" rel="script" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" rel="script" type="text/javascript"></script>
+    <link rel="icon" type="image/png" href="/images/favicon.ico"/>
+    <link href="/libs/bootstrap.min.css" rel="stylesheet">
+    <link href="/switchButton.css" rel="stylesheet">
+
+</head>
+<body>
+<div style="width: 50%">
+    <img th:src="${urlStream}">
+</div>
+<a th:href="@{/fim-feedback}" target="_blank">
+    Parar Stream
+</a>
+
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">Conexão WebSocket:</label>
+                    <button id="connect" class="btn btn-success" type="submit">Conectar</button>
+                    <button id="disconnect" class="btn btn-danger" type="submit" disabled="disabled">Desconectar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">Comando:</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                </div>
+                <button id="send" class="btn btn-primary" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <div class="row" id="painel" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
+        <div class="justify-content-center" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 8px; width: unset;">
+            <label class="switch">
+                <input type="checkbox" class="inputButton" th:id="${input}">
+                <span class="slider"></span>
+            </label>
+            <p th:text="${'SW[' + input + ']'}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+#Configurações socket para FPGA
+fpga:
+  host: localhost
+  port: 2540
+
+#Configuraçao com rotas do raspberry
+feedback:
+  video: http://192.168.1.8:8081
+  iniciarVideo: http://192.168.1.8:809
+  pararVideo: http://192.168.1.8:810
+
+arquivos:
+  vdlab: arquivos/
