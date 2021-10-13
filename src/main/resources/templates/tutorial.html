@@ -9,7 +9,6 @@
 <div class="conteiner">
     <div class="row">
         <div class="col-3">
-
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -17,16 +16,97 @@
                             Criar projeto no Quartus II
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#bibliotecaVDLAB">
+                            Adicionar biblioteca do VDLAB
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#utilizarBibliotecaVDLAB">
+                            Utilizar biblioteca do VDLAB
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#pinagemDoProjeto">
+                            Definir pinagem do projeto
+                        </a>
+                    </li>
                 </ul>
             </div>
-
         </div>
-        <div class="col-10">
-            <h3 id="criandoProjetoQuartus">Criando projeto no Quartus II</h3>
-            <hr>
-            <div class="">
-
-            </div>
+        <div class="col-9">
+            <section id="criandoProjetoQuartus">
+                <h3>Criando projeto no Quartus II</h3>
+                <hr>
+                <div class="mb-2">
+                    Com a Interface do quartus II aberta clique em <strong>File</strong> > <strong>New Project Wizard</strong>
+                    > <strong>Next</strong>.
+                </div>
+                <div class="w-75 text-center mb-1">
+                    <img src="/images/tutorial-projeto-1.png" width="450">
+                    <br>
+                    <small>Tela de escolha de diretório e nome</small>
+                </div>
+                <div class="mb-2">
+                    <p>Escolha o diretório que ficará os arquivos do projeto, nome do projeto e o nome da Entidade de alto nível (recomenda-se o uso do mesmo nome do projeto).</p>
+                    <p>Clique em <strong>Next > Next</strong>.</p>
+                </div>
+                <div class="w-75 text-center mb-1">
+                    <img src="/images/tutorial-projeto-2.png" width="450">
+                    <br>
+                    <small>Tela de escolha de modelo de FPGA</small>
+                </div>
+                <div class="mb-2">
+                    <p>Selecione os mesmos campos apresentados na imagem de forma que:</p>
+                    <p>Em <strong>Device Family</strong> escolha <strong>Cyclone II</strong>.</p>
+                    <p>Em <strong>Avaiable Devices</strong> escolha <strong>EP2C35F672C6</strong>. </p>
+                    <p class="text-muted">(Dica): Em <strong>Name Filter</strong> digite <strong>672</strong> para encontrar mais rapidamente o dispositivo</p>
+                    <p>Clique em <strong>Next > Next > Finish</strong>.</p>
+                </div>
+            </section>
+            <br>
+            <section class="mt-2" id="bibliotecaVDLAB">
+                <h3>Adicionando biblioteca do VDLAB</h3>
+                <hr>
+                <div class="mb-2 mt-1">
+                    <p>Faça o <a href="/download-vdlab" target="_blank">download da biblioteca do VDLAB</a>.</p>
+                    <p>Descompacte os arquivos da biblioteca na pasta raiz do seu projeto.</p>
+                </div>
+            </section>
+            <br>
+            <section id="utilizarBibliotecaVDLAB">
+                <h3>Utilizando biblioteca do VDLAB</h3>
+                <hr>
+                <div class="mb-2 mt-1">
+                    <p>Crie um arquivo do tipo <strong>Block Diagram/Schematic File </strong> indo em:</p>
+                    <p><strong>File</strong> > <strong>New...</strong> > <strong>Block Diagram/Schematic File</strong>.</p>
+                </div>
+                <div class="w-75 text-center mb-1">
+                    <img src="/images/tutorial-projeto-3.png" width="200">
+                    <br>
+                    <small>Tela de escolha do tipo de arquivo</small>
+                </div>
+                <div class="mb-2 mt-1">
+                    <p>Clique em <strong>Symbol Tool</strong> <img src="/images/tutorial-projeto-4.png" width="50">.</p>
+                    <p>No menu de Libraries entre na pasta <strong>Project</strong>.</p>
+                    <p>Escolha o <strong>modulo_inputs_outputs</strong> como na foto.</p>
+                    <div class="w-75 text-center mb-1">
+                        <img src="/images/tutorial-projeto-5.png" width="450">
+                        <br>
+                        <small>Selecione o componente mostrado na imagem</small>
+                    </div>
+                    <p>Pronto! agora basta conectar os inputs desejados do seu projeto no switch button do modulo de inputs virtuais, como usado na imagem abaixo.</p>
+                    <div class="w-75 text-center mb-1">
+                        <img src="/images/tutorial-projeto-6.png" width="450">
+                        <br>
+                        <small>Projeto utilizando a biblioteca do VDLAB</small>
+                    </div>
+                </div>
+            </section>
+            <section id="pinagemDoProjeto">
+                <h3>Pinagem de outputs para utilizar o VDLAB</h3>
+                <hr>
+            </section>
         </div>
     </div>
 </div>
