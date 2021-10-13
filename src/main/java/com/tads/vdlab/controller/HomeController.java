@@ -2,6 +2,7 @@ package com.tads.vdlab.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +44,11 @@ public class HomeController {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    @GetMapping("/tutorial")
+    public String paginaTutorial(){
+        return "tutorial";
     }
 
     private void executaComandoShell(String comando) throws IOException {

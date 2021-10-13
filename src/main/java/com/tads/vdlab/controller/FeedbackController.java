@@ -70,9 +70,9 @@ public class FeedbackController {
     @GetMapping("/fim-feedback")
     public ModelAndView fimFeedback(){
 
-        Thread newThread = new Thread(this::stopStream);
+//        Thread newThread = new Thread(this::stopStream);
 
-        newThread.start();
+//        newThread.start();
 
         ModelAndView modelAndView = new ModelAndView("index");
         return modelAndView;

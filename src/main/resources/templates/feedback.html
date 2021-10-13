@@ -8,19 +8,29 @@
     <script src="/libs/sockjs.min.js" rel="script" type="text/javascript"></script>
     <script src="/libs/stomp.min.js" rel="script" type="text/javascript"></script>
     <script src="/libs/bootstrap.min.js" rel="script" type="text/javascript"></script>
+    <script src="/feedback.js" rel="script" type="text/javascript"></script>
     <link rel="icon" type="image/png" href="/images/favicon.ico"/>
     <link href="/libs/bootstrap.min.css" rel="stylesheet">
     <link href="/switchButton.css" rel="stylesheet">
-
+    <style>
+        /* This is purely for the demo */
+        .videoWindow {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 10px solid cadetblue;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-<div style="width: 50%">
-    <img th:src="${urlStream}">
+<div class="d-flex justify-content-center align-items-center videoWindow mb-2">
+    <img th:src="${urlStream}" style="width: 100%">
 </div>
-<a th:href="@{/fim-feedback}" target="_blank">
-    Parar Stream
-</a>
-
+<div class="d-flex justify-content-center align-items-center">
+    <a th:href="@{/fim-feedback}" target="_blank">
+        <button  class="btn btn-danger">Parar Visualização</button>
+    </a>
+</div>
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
@@ -32,18 +42,9 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">Comando:</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                </div>
-                <button id="send" class="btn btn-primary" type="submit">Send</button>
-            </form>
-        </div>
     </div>
     <div class="row" id="painel" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
-        <div class="justify-content-center" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 8px; width: unset;">
+        <div class="justify-content-center align-items-center" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 6px; width: unset;">
             <label class="switch">
                 <input type="checkbox" class="inputButton" th:id="${input}">
                 <span class="slider"></span>
