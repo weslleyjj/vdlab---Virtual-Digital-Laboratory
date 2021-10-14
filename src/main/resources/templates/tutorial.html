@@ -3,37 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Tutorial VDLAB</title>
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="conteiner">
     <div class="row">
-        <div class="col-3">
-            <div class="sidebar-sticky">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#criandoProjetoQuartus">
+                        <a class="nav-link active" aria-current="page" href="#criandoProjetoQuartus">
                             Criar projeto no Quartus II
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#bibliotecaVDLAB">
+                        <a class="nav-link" href="#bibliotecaVDLAB">
                             Adicionar biblioteca do VDLAB
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#utilizarBibliotecaVDLAB">
+                        <a class="nav-link" href="#utilizarBibliotecaVDLAB">
                             Utilizar biblioteca do VDLAB
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#pinagemDoProjeto">
+                        <a class="nav-link" href="#pinagemDoProjeto">
                             Definir pinagem do projeto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#rodarProjeto">
+                            Executar projeto no VDLAB
                         </a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </nav>
         <div class="col-9">
             <section id="criandoProjetoQuartus">
                 <h3>Criando projeto no Quartus II</h3>
@@ -106,6 +122,50 @@
             <section id="pinagemDoProjeto">
                 <h3>Pinagem de outputs para utilizar o VDLAB</h3>
                 <hr>
+                <div class="mb-4 mt-1 bg-warning text-dark p-5 w-75">
+                    <h5><strong>Atenção!</strong></h5>
+                    <p>Para escolher os pinos de saída do projeto faz se necessário seguir o padrão de nomenclatura.</p>
+                    <p>Por exemplo: para o primeiro led vermelho da placa, nomear o outuput como <strong>LEDR[0]</strong></p>
+                    <p>Para o primeiro led verde da placa, <strong>LEDG[0]</strong></p>
+                    <p>Para displays de 7 segmentos <strong>HEX[6..0]</strong> e assim por diante</p>
+                </div>
+                <div class="mb-2 mt-2">
+                    <h5>Pinagem pela biblioteca do VDLAB</h5>
+                    <p>Com os nomes dos outputs seguindo o padrão de nomenclatura correto e <strong>com o projeto compilado</strong> vá em:</p>
+                    <p><strong>Assignments</strong> > <strong>Import Assignments</strong> > <strong>...</strong></p>
+                    <p>Selecione o arquivo <strong>de2.qsf</strong> na raiz do projeto. <small class="text-muted">Arquivo provido pela biblioteca do VDLAB</small></p>
+                    <p>Dê o <strong>OK</strong>.</p>
+                    <p>Agora o Quartus II fará a atribuição dos pinos de cada output automaticamente.</p>
+                </div>
+                <div class="mb-2 mt-2">
+                    <h5>Pinagem pelo Pin Planner do Quartus</h5>
+                    <p>Caso não possua o pdf com a localização dos pinos faça o <a href="/download-pinagem-de2" target="_blank">Download aqui</a></p>
+                    <p>Na tela do Quartus vá em:</p>
+                    <p><strong>Assignments</strong> > <strong>Pin Planner</strong>. Você verá a seguinte tela:</p>
+                </div>
+                <div class="w-75 text-center mb-1">
+                    <img src="/images/tutorial-projeto-7.png" width="450">
+                    <br>
+                    <small>Interface do Pin Planner</small>
+                </div>
+                <div class="mb-2 mt-2">
+                    <p>Repare que no menu <strong>All Pins</strong> na parte mais baixa da tela, existe uma listagem com os outputs e inputs adicionados ao seu projeto.</p>
+                    <p>Clique na célula pertencente a coluna <strong>Location</strong> e de acordo com oque preferir insira o pino desejado para o input ou output do projeto.</p>
+                    <p>Após a escolha dos pinos de cada input/output do projeto re-compile seu projeto.</p>
+                </div>
+                <p><strong>Após a correta definição dos pinos sempre compile seu projeto!</strong></p>
+            </section>
+            <section id="rodarProjeto">
+                <h3>Rodando seu projeto no VDLAB</h3>
+                <hr>
+                <div class="mb-2 mt-2" style="margin-bottom: 50px">
+                    <p>Na página inicial do VDLAB, clique no botão <strong>Procurar...</strong></p>
+                    <p>Navegue para a pasta do seu projeto do quartus e escolha o arquivo terminado em <strong>.sof</strong></p>
+                    <p class="text-muted">Caso não encontre, verifique a pasta <strong>output_files</strong>, se ainda não encontrar, compile seu projeto e procure o arquivo novamente.</p>
+                    <p>Após escolher o arquivo clique em <strong>Enviar e acompanhar projeto</strong></p>
+                    <p>Utilize dos switch buttons e dos push buttons no painel de controle para testar seu projeto.</p>
+                    <p>Divirta-se!</p>
+                </div>
             </section>
         </div>
     </div>
