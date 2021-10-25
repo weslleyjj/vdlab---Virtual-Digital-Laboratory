@@ -47,13 +47,17 @@ proc closeport { } {
 }
 
 proc exec_conn {send_data} {
-	openport [string range $send_data 21 end]
+	# Connect on the desired fpga
+	set fpga_order [string range $send_data 22 end]
+	set input_received [string range $send_data 0 21]	
+	openport $fpga_order
+	
 	device_lock -timeout 10000
 	# Shift through DR.  Note that -dr_value is unimportant since we're not actually capturing the value inside the part, just seeing what shifts out
-	puts "Writing - $send_data"
+	puts "Writing - $input_received"
 	device_virtual_ir_shift -instance_index 0 -ir_value 1 -no_captured_ir_value
 	#set tdi [device_virtual_dr_shift -dr_value $send_data -instance_index 0  -length 22] #Use this if you want to read back the tdi while you shift in the new value
-	device_virtual_dr_shift -dr_value $send_data -instance_index 0  -length 22 -no_captured_dr_value
+	device_virtual_dr_shift -dr_value $input_received -instance_index 0  -length 22 -no_captured_dr_value
 
 	# Set IR back to 0, which is bypass mode
 	device_virtual_ir_shift -instance_index 0 -ir_value 0 -no_captured_ir_value
@@ -113,7 +117,7 @@ proc IncomingData {sock} {
 	set data_len [string length $line]
 	if {$data_len != "0"} then {
 		#Extract the First Bit
-		set line [string range $line 0 21]
+		set line [string range $line 0 23]
 		#Send the vJTAG Commands to Update the command
 		exec_conn $line
 	}
