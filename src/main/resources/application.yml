@@ -5,9 +5,14 @@ fpga:
 
 #Configuraçao com rotas do raspberry
 feedback:
-  video: http://192.168.1.8:8081
-  iniciarVideo: http://192.168.1.8:809
-  pararVideo: http://192.168.1.8:810
+  video: http://192.168.1.10:8081
+  iniciarVideo: http://192.168.1.10:809
+  pararVideo: http://192.168.1.10:810
 
 arquivos:
   vdlab: arquivos/
+
+comandos:
+  scripts:
+    programmer: /home/weslley/Documentos/TADS/TCC/testes-tcl/programmer.sh
+    getPlacas: /home/weslley/Documentos/TADS/TCC/testes-tcl/get_fpga_order.sh
