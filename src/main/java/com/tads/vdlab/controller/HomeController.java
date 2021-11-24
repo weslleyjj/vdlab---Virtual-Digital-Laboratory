@@ -55,7 +55,7 @@ public class HomeController {
 
             ScriptUtil.executaComandoShellArray(comandoProgramar);
 
-            return "redirect:/controlador-fpga";
+            return "redirect:/controlador-fpga/"+ placaEscolhida;
 
         } catch (IOException e) {
             logger.error(e.getMessage());

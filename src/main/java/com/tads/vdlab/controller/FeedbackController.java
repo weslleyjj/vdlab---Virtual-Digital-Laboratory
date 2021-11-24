@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,8 +18,11 @@ import java.net.Socket;
 @Controller
 public class FeedbackController {
 
-    @Value("${feedback.video}")
-    private String videoUrl;
+    @Value("${feedback.video1}")
+    private String video1Url;
+
+    @Value("${feedback.video2}")
+    private String video2Url;
 
     @Value("${feedback.iniciarVideo}")
     private String startStream;
@@ -35,13 +39,17 @@ public class FeedbackController {
     private Socket socket;
     private DataOutputStream socketOut;
 
-    @GetMapping("/controlador-fpga")
-    public ModelAndView feedback() throws InterruptedException, IOException {
+    @GetMapping("/controlador-fpga/{camera}")
+    public ModelAndView feedback(@PathVariable("camera") Integer camera) throws InterruptedException, IOException {
 
         //startStream();
 
         ModelAndView model = new ModelAndView("feedback");
-        model.addObject("urlStream", videoUrl);
+        if(camera == 0){
+            model.addObject("urlStream", video2Url);
+        } else if (camera == 1) {
+            model.addObject("urlStream", video1Url);
+        }
 
         //TimeUnit.SECONDS.sleep(3);
 
