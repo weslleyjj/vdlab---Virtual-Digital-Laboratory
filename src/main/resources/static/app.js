@@ -69,7 +69,7 @@ function sendName() {
 }
 
 function sendCommand(command){
-    stompClient.send("/app/comando", {}, command);
+    stompClient.send("/app/comando", {}, JSON.stringify({'comandoInputs': command, 'placaDesejada': $("#placaConectada").val()}));
 }
 
 function showGreeting(message) {

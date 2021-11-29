@@ -1,5 +1,8 @@
 package com.tads.vdlab.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,6 +17,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class FeedbackController {
@@ -45,11 +49,12 @@ public class FeedbackController {
         //startStream();
 
         ModelAndView model = new ModelAndView("feedback");
-        if(camera == 0){
+        if(camera == 1){
             model.addObject("urlStream", video2Url);
-        } else if (camera == 1) {
+        } else if (camera == 2) {
             model.addObject("urlStream", video1Url);
         }
+        model.addObject("placa", camera);
 
         //TimeUnit.SECONDS.sleep(3);
 
@@ -61,12 +66,12 @@ public class FeedbackController {
 
     @MessageMapping("/comando")
     @SendTo("/painel/comando")
-    public void fpgaCommand(Integer comando) throws Exception {
-
+    public void fpgaCommand(DadosSocket dados) throws Exception {
+        Integer comando = dados.getComandoInputs();
         //Conversão de número inteiro para binário
         String conversao = Integer.toBinaryString(comando);
         conversao = String.format("%22s", conversao).replace(' ', '0');
-
+        conversao += dados.getPlacaDesejada().toString();
         socketOut.write(conversao.getBytes());
         socketOut.writeUTF("\n");
 
@@ -104,6 +109,14 @@ public class FeedbackController {
         }catch (Exception e){
             System.out.println("Streaming iniciado");
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DadosSocket{
+        Integer comandoInputs;
+        Integer placaDesejada;
     }
 
 }
