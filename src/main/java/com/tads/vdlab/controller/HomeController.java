@@ -34,6 +34,7 @@ public class HomeController {
     private List<String> placasConectadas = new ArrayList<>();
 
     public HomeController() throws IOException {
+        placasConectadas.add("Espaço Vazio Inicial");
         getPlacasNoSistema();
     }
 
@@ -54,7 +55,6 @@ public class HomeController {
             String[] comandoProgramar = {scriptProgrammer, placasConectadas.get(placaEscolhida), "p;" + targetLocation};
 
             ScriptUtil.executaComandoShellArray(comandoProgramar);
-            placaEscolhida++;
             return "redirect:/controlador-fpga/"+ placaEscolhida;
 
         } catch (IOException e) {

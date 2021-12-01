@@ -20,9 +20,17 @@
             border: 10px solid cadetblue;
             border-radius: 10px;
         }
+        .painel-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            width: fit-content;
+            padding: 10px;
+            background-color: #174685;
+        }
     </style>
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
 <input type="hidden" id="placaConectada" th:value="${placa}">
 <div class="d-flex justify-content-center align-items-center videoWindow mb-2">
     <img th:src="${urlStream}" style="width: 100%">
@@ -32,25 +40,25 @@
         <button  class="btn btn-danger">Parar Visualização</button>
     </a>
 </div>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">Conexão WebSocket:</label>
-                    <button id="connect" class="btn btn-success" type="submit">Conectar</button>
-                    <button id="disconnect" class="btn btn-danger" type="submit" disabled="disabled">Desconectar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="row" id="painel" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
-        <div class="justify-content-center align-items-center" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 6px; width: unset;">
+<div id="main-content" class="container" style="display: flex; justify-content: center">
+<!--    <div class="row">-->
+<!--        <div class="col-md-6">-->
+<!--            <form class="form-inline">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="connect">Conexão WebSocket:</label>-->
+<!--                    <button id="connect" class="btn btn-success" type="submit">Conectar</button>-->
+<!--                    <button id="disconnect" class="btn btn-danger" type="submit" disabled="disabled">Desconectar</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="row painel-inputs mt-2" id="painel">
+        <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 4px; width: unset;">
             <label class="switch">
                 <input type="checkbox" class="inputButton" th:id="${input}">
                 <span class="slider"></span>
             </label>
-            <p th:text="${'SW[' + input + ']'}"></p>
+            <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@ var stompClient = null;
 let inputs = new Array(18).fill(false);
 
 $(document).ready(function (){
+    connect();
     $('#painel input').change(function (){
         let idButton = $(this).attr("id");
 
