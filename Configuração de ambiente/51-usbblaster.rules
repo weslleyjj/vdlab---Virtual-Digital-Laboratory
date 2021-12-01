@@ -1,3 +1,5 @@
+# APENAS PARA UBUNTU
+# Adicionar este arquivo no path: /etc/udev/rules.d/
 # Arquivo para configurar drivers do USB BLASTER no ubuntu
 
 # USB Blaster

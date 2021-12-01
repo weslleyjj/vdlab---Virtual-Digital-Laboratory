@@ -1,0 +1,21 @@
+Conectar raspberry:
+
+achar o ip:
+nmap -sP meuip/24
+
+ssh pi@ipencontrado
+raspberry
+
+configs do xinetd: /etc/xinetd.d/
+
+configs do motion: /etc/motion/
+
+usar as placas por id para obter vídeo corretamente (/dev/v4l/by-id/)
+
+programa fswebcam para configurar o brilho
+
+configuração dos arquivos de camera e edição do motion.conf
+
+Configurar: Verificar qual placa a webcam está apontando,
+ajustar no application.yml os endereços corretos pra cada placa
+para bater certo com a camera
