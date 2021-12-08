@@ -3,15 +3,16 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/images/favicon.ico"/>
+    <script src="/libs/jquery.min.js" rel="script" type="text/javascript"></script>
     <style>
-        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
-
+        @import url(https://fonts.googleapis.com/css?family=Roboto:500);
 
         .login-page {
             width: 360px;
-            padding: 8% 0 0;
-            margin: auto;
+            height: fit-content;
+            padding: 1.5rem 0 0 0;
+            margin: 0 auto 0 auto;
         }
 
         @media only screen and (max-width: 600px) {
@@ -20,12 +21,18 @@
             }
         }
 
+        body {
+            min-height: 100vh;
+            max-height: 100vh;
+            margin: 0;
+        }
+
         .form {
             position: relative;
             z-index: 1;
             background: #FFFFFF;
             max-width: 360px;
-            margin: 0 auto 100px;
+            margin: 0 auto 0;
             padding: 45px;
             text-align: center;
             box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
@@ -46,7 +53,7 @@
             font-family: "Roboto", sans-serif;
             text-transform: uppercase;
             outline: 0;
-            background: #000000;
+            background: #3e66b8;
             transition: 0.3s ease;
             width: 100%;
             border: 0;
@@ -59,7 +66,7 @@
             font-weight: bold;
         }
         .form button:hover,.form button:active,.form button:focus {
-            background: #feb626;
+            background: #5094b2;
         }
         .form .message {
             margin: 15px 0 0;
@@ -113,49 +120,54 @@
         }
         img {
             width: 50%;
-            border-radius: 50%;
+            border-radius: 10%;
         }
 
         h1 {
-            font-family: fantasy;
+            font-family: Roboto;
         }
 
         body {
-            background: #000000; /* fallback for old browsers */
-            background: -webkit-linear-gradient(right, #b6b6b6, #dbdbdb);
-            background: -moz-linear-gradient(right, #b6b6b6, #dbdbdb);
-            background: -o-linear-gradient(right, #b6b6b6, #dbdbdb);
-            background: linear-gradient(to left, #b6b6b6, #dbdbdb);
+            background: url('/images/background-texture-default.jpg');
+            background-size: 100%;
+            background-repeat: inherit;
+            /*background: -webkit-linear-gradient(right, #b6b6b6, #dbdbdb);*/
+            /*background: -moz-linear-gradient(right, #b6b6b6, #dbdbdb);*/
+            /*background: -o-linear-gradient(right, #b6b6b6, #dbdbdb);*/
+            /*background: linear-gradient(to left, #b6b6b6, #dbdbdb);*/
             font-family: "Roboto", sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
     </style>
 </head>
-<body>
-<div class="login-page">
-    <div class="form">
-        <h1>QUEIJOSOFT</h1>
-        <div>
-            <img src="img/logo_edit_small.png">
-        </div>
-        <h3>FAÇA O SEU LOGIN</h3>
-        <p th:if="${loginError}" class="error">Usuário ou senha inválidos</p>
-        <form th:action="@{/login}" method="post" class="login-form">
-            <div th:if="${param.error}">
-                <div class="alert alert-danger">
-                    Credenciais inválidas.
-                </div>
+
+<body >
+<div style="background-color: rgba(0, 0, 0, 0.5); height: 100vh">
+    <div class="login-page">
+        <div class="form">
+            <h1><strong>Virtual Digital Laboratory</strong></h1>
+            <div>
+                <img src="images/favicon.ico">
             </div>
-            <input type="text" name="username" placeholder="login"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">login</button>
-<!--            <p class="message">Não tem uma conta? <b><a href="/usuario/form">Criar conta</a></b></p>-->
-            <p class="message">Esqueceu a senha? <b><a href="/usuario/recuperar-senha">Gerar nova senha</a></b></p>
-        </form>
+            <h3>Acesse sua conta</h3>
+            <form th:action="@{/login}" method="post" class="login-form">
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">
+                        Credenciais inválidas.
+                    </div>
+                </div>
+                <input type="text" name="username" placeholder="login"/>
+                <input type="password" name="password" placeholder="password"/>
+                <button type="submit">login</button>
+                <p class="message">Não tem uma conta? <b><a href="/usuario/cadastrar">Criar conta</a></b></p>
+                <p class="message">Esqueceu a senha? <b><a href="/usuario/recuperar-senha">Gerar nova senha</a></b></p>
+            </form>
+        </div>
     </div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<a style="display: none" href='https://www.freepik.com/vectors/background'>Background vector created by freepik - www.freepik.com</a>
+
 </body>
 <script>
 

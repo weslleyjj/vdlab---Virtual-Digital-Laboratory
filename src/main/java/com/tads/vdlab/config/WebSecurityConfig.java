@@ -58,17 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/fonts/**",
                 "/js/**",
                 "/libs/**",
-                "/*",
         };
 
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
         http.authorizeRequests()
                 .antMatchers(staticResources).permitAll()
-                .antMatchers(HttpMethod.GET, "/usuario/recuperar-senha").permitAll()
-                .antMatchers(HttpMethod.POST, "/usuario/enviar-email").permitAll()
-                .antMatchers(HttpMethod.GET, "/usuario/form").hasAnyAuthority("ADMIN") //tratar erro de user que tentou acessar
-                .antMatchers(HttpMethod.POST, "/usuario/submter").hasAnyAuthority("ADMIN","USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login")
