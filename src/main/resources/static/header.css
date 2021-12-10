@@ -1,0 +1,29 @@
+.logo {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+.logo img {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+}
+
+.menus{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-size: 1.4rem;
+    margin-left: 10%;
+}
+
+a{
+    color: #565e64;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    transition: 0.5s;
+    color: #0a58ca;
+}

@@ -38,6 +38,11 @@ public class HomeController {
         getPlacasNoSistema();
     }
 
+    @GetMapping("/")
+    public String paginaInicial() {
+        return "home";
+    }
+
     @PostMapping(value = "/upload")
     public String uploadArquivoSof(@RequestParam("file") MultipartFile file, Integer placaEscolhida ) throws IOException {
         if (file.isEmpty()) {
