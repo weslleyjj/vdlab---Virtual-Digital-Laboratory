@@ -8,19 +8,28 @@
 <div class="foto-fundo">
     <div class="pos-foto d-flex justify-content-center">
         <div class="card-principal w-75 d-flex justify-content-center">
-            <form class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post">
+            <form class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post" th:object="${agendamento}">
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    <label for="selectUsuario" class="form-label">Usuário:</label>
+                    <select id="selectUsuario" class="form-select" aria-label="Default select example" th:field="*{usuario}">
+                        <option value=""></option>
+                        <option th:each="u : ${usuarios}" th:text="${u.nome}" th:value="${u.id}"></option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Data e hora</label>
-                    <input type="datetime-local" class="form-control" id="exampleInputPassword1">
+                    <input type="datetime-local" class="form-control" id="exampleInputPassword1" th:field="*{dataAgendada}">
                 </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                <div class="mb-3">
+                    <label for="selectTempoSessao" class="form-label">Tempo de sessão:</label>
+                    <select id="selectTempoSessao" class="form-select" aria-label="Default select example" th:field="*{tempoSessao}">
+                        <option value="10">10 Minutos</option>
+                        <option value="15">15 Minutos</option>
+                        <option value="20">20 Minutos</option>
+                        <option value="25">25 Minutos</option>
+                        <option value="30">30 Minutos</option>
+                        <option value="0">Indefinido</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

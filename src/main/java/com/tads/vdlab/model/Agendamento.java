@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -22,8 +23,11 @@ public class Agendamento extends AbstractEntidade{
     @ManyToOne
     private Usuario usuario;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataAgendada;
 
     @OneToOne
     private Usuario cadastrante;
+
+    private Integer tempoSessao; // Tempo da sessão em minutos
 }

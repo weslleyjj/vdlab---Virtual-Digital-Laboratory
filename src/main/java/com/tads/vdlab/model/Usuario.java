@@ -3,6 +3,7 @@ package com.tads.vdlab.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@SuperBuilder
 @Table(name="usuarios")
 public class Usuario extends AbstractPessoa {
 
