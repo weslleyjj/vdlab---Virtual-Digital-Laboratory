@@ -30,6 +30,8 @@ feedback:
 
 arquivos:
   vdlab: arquivos/
+  pdf: arquivos/pdf/
+  libs: arquivos/libs/
 
 comandos:
   scripts:
