@@ -23,10 +23,10 @@ fpga:
 
 #Configuraçao com rotas do raspberry
 feedback:
-  video1: http://192.168.1.10:8081
-  video2: http://192.168.1.10:8082
-  iniciarVideo: http://192.168.1.10:809
-  pararVideo: http://192.168.1.10:810
+  video1: http://192.168.1.13:8081
+  video2: http://192.168.1.13:8082
+  iniciarVideo: http://192.168.1.13:809
+  pararVideo: http://192.168.1.13:810
 
 arquivos:
   vdlab: arquivos/

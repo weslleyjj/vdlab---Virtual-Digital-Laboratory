@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 @Controller
 public class FeedbackController {
@@ -87,7 +84,7 @@ public class FeedbackController {
 
 //        newThread.start();
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("carregar");
         return modelAndView;
     }
 

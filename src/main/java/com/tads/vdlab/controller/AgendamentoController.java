@@ -7,6 +7,7 @@ import com.tads.vdlab.model.Usuario;
 import com.tads.vdlab.repository.AgendamentoRepository;
 import com.tads.vdlab.repository.RoleRepository;
 import com.tads.vdlab.repository.UsuarioRepository;
+import com.tads.vdlab.util.UsuarioUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,17 +49,12 @@ public class AgendamentoController {
 
     @PostMapping("/agendar")
     public String agendar(@ModelAttribute Agendamento agendamento, BindingResult result, Principal principal){
-        Usuario cadastrante = getUsuarioLogado(principal);
+        Usuario cadastrante = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
         agendamento.setCadastrante(cadastrante);
         agendamento.setAtivo(true);
 
         repository.save(agendamento);
 
         return "redirect:/";
-    }
-
-    private Usuario getUsuarioLogado(Principal principal){
-        Usuario u = usuarioRepository.getByLoginEqualsAndAtivo(principal.getName(), true);
-        return u;
     }
 }

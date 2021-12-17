@@ -1,0 +1,18 @@
+.foto-fundo {
+    background: url('/images/background-texture-default.jpg');
+    background-size: 100%;
+    background-repeat: inherit;
+}
+
+.pos-foto {
+    background-color: rgba(194, 194, 194, 0.9);
+    height: 100vh;
+}
+
+.card-principal{
+    /*width: 90%;*/
+    background: white;
+    margin: 30px 0px 50px 0px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
