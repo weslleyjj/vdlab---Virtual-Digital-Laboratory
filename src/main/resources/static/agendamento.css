@@ -85,3 +85,15 @@ body {
     font-family: "Open Sans", sans-serif;
     line-height: 1.25;
 }
+
+.btn-paginacao > a {
+    padding: 10px;
+    background: cornflowerblue;
+    border-radius: 10px;
+    margin: 10px 10px 10px 0px;
+    color: white;
+}
+
+.activePage {
+    background-color: #3e5994 !important;
+}

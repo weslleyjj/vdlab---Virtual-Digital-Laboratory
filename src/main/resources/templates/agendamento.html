@@ -25,7 +25,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="u : ${usuarios}">
+                    <tr th:each="u : ${usuariosPage}">
                         <td data-label="Account" th:text="${u.nome}"></td>
                         <td data-label="Due Date" th:text="${u.contato}"></td>
                         <td data-label="Amount" th:text="${u.email}"></td>
@@ -35,6 +35,12 @@
                     </tr>
                     </tbody>
                 </table>
+                <div th:if="${usuariosPage.totalPages > 0}" class="btn-paginacao"
+                     style="display: flex; flex-wrap: wrap; width: fit-content;">
+                    <a th:each="pageNumber : ${pageNumbers}" th:href="@{/agendamento(size=${usuariosPage.size}, page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:class="${pageNumber==usuariosPage.number + 1} ? activePage"></a>
+                </div>
             </div>
 
             <form id="formAgendamento" class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post" th:object="${agendamento}">
