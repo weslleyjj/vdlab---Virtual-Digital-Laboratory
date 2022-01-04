@@ -16,10 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,14 +44,17 @@ public class AgendamentoController {
 
     @GetMapping
     public String agendamento(Model model,
+
                               @RequestParam("page") Optional<Integer> page,
                               @RequestParam("size") Optional<Integer> size){
 
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
         Page<UsuarioDTO> usuarioPage;
+        boolean isBusca = model.containsAttribute("busca");
+        String nomeBusca = model.containsAttribute("nomeBusca") ? (String) model.getAttribute("nomeBusca") : null;
 
-        usuarioPage = usuarioService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+        usuarioPage = usuarioService.findPaginated(PageRequest.of(currentPage - 1, pageSize), isBusca, nomeBusca);
 
         model.addAttribute("usuariosPage", usuarioPage);
 
@@ -62,6 +69,14 @@ public class AgendamentoController {
         model.addAttribute("agendamento", new Agendamento());
 
         return "agendamento";
+    }
+
+    @GetMapping("/buscaUsuario")
+    public String buscaUsuarioAgendamento(@RequestParam("nome") String busca, Model model, RedirectAttributes redirectAttributes){
+
+        redirectAttributes.addFlashAttribute("nomeBusca", busca);
+        redirectAttributes.addFlashAttribute("busca", true);
+        return "redirect:/agendamento";
     }
 
     @PostMapping("/agendar")

@@ -3,7 +3,14 @@ $(document).ready(() => {
     $("#formAgendamento").hide();
 })
 
-$("#formAgendamento").on('submit',(e) => {
+$("#busca-usuario-form").on('submit',(e) => {
+    e.preventDefault();
+    const valorBusca = $("#buscaUsuario").val();
+    if(valorBusca.trim().length > 0){
+        window.location.href = "/agendamento/buscaUsuario?nome="+valorBusca;
+    } else {
+        window.location.href = "/agendamento";
+    }
 })
 
 function escolherUsuario(idUsuario, btn){

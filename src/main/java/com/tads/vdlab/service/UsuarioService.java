@@ -12,8 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +31,28 @@ public class UsuarioService {
         this.roleRepository = roleRepository;
     }
 
-    public Page<UsuarioDTO> findPaginated(Pageable pageable) {
+    public Page<UsuarioDTO> findPaginated(Pageable pageable, boolean busca, String nomeBusca) {
 
-        Role roleParaAgendar = roleRepository.findByName("DISCENTE");
-        List<UsuarioDTO> usuarios = usuarioRepository.findByRolesIsAndAtivo(roleParaAgendar, true)
-                .stream().map(UsuarioDTO::toDTO).collect(Collectors.toList());
+        List<UsuarioDTO> usuariosBanco = findAllUsuariosDiscentes();
+        List<UsuarioDTO> usuarios =  new ArrayList<>();
+
+        if(busca && nomeBusca != null){
+            Pattern pattern = Pattern.compile(nomeBusca, Pattern.CASE_INSENSITIVE);
+
+            if (!usuariosBanco.isEmpty()) {
+                Matcher matcher;
+                boolean matchFound;
+                for(UsuarioDTO usr: usuariosBanco) {
+                    matcher = pattern.matcher(usr.getNome());
+                    matchFound = matcher.find();
+                    if (matchFound) {
+                        usuarios.add(usr);
+                    }
+                }
+            }
+        } else {
+            usuarios = usuariosBanco;
+        }
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -50,6 +70,12 @@ public class UsuarioService {
                 = new PageImpl<UsuarioDTO>(list, PageRequest.of(currentPage, pageSize), usuarios.size());
 
         return pedidoPage;
+    }
+
+    public List<UsuarioDTO> findAllUsuariosDiscentes(){
+        Role roleParaAgendar = roleRepository.findByName("DISCENTE");
+        return usuarioRepository.findByRolesIsAndAtivo(roleParaAgendar, true)
+                .stream().map(UsuarioDTO::toDTO).collect(Collectors.toList());
     }
 
 }

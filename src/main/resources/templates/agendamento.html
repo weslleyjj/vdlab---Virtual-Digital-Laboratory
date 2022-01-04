@@ -14,7 +14,14 @@
                 <h4 class="mb-3">Agendar horário de uso</h4>
             </div>
             <div id="tabelaUsuarios" style="display: block">
-                <h4 class="mb-3">Escolha um usuario</h4>
+                <div class="d-flex justify-content-between">
+                    <h4 class="mb-3 mr-3">Escolha um usuario</h4>
+                    <form method="get" id="busca-usuario-form" class="mb-3 d-flex justify-content-center">
+                        <input class="form-control" type="text" id="buscaUsuario" placeholder="Filtrar por nome">
+                        <button type="submit" class="btn btn-outline-primary" style="margin-left: 10px">Buscar</button>
+                    </form>
+                </div>
+
                 <table>
                     <thead>
                     <tr>
