@@ -1,28 +1,56 @@
 <html lang="en">
 <head>
     <link href="/home.css" rel="stylesheet">
+    <link href="/agendamento.css" rel="stylesheet">
 </head>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<body>
+
 <div class="foto-fundo">
+<body>
     <div class="pos-foto d-flex justify-content-center">
-        <div class="card-principal w-75 d-flex justify-content-center">
-            <form class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post" th:object="${agendamento}">
+        <div class="card-principal w-75 p-5 justify-content-center" style="overflow-y: auto">
+            <div class="d-flex justify-content-center">
+                <h4 class="mb-3">Agendar horário de uso</h4>
+            </div>
+            <div id="tabelaUsuarios" style="display: block">
+                <h4 class="mb-3">Escolha um usuario</h4>
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Contato</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${usuarios}">
+                        <td data-label="Account" th:text="${u.nome}"></td>
+                        <td data-label="Due Date" th:text="${u.contato}"></td>
+                        <td data-label="Amount" th:text="${u.email}"></td>
+                        <td data-label="Period">
+                            <button th:onclick="'escolherUsuario(' + ${ u.id } +', this)'" th:value="${u.nome}" class="btn btn-primary">Escolher</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form id="formAgendamento" class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post" th:object="${agendamento}">
+                <input type="hidden" id="formCampoUsuario" th:field="*{usuario}">
                 <div class="mb-3">
                     <label for="selectUsuario" class="form-label">Usuário:</label>
-                    <select id="selectUsuario" class="form-select" aria-label="Default select example" th:field="*{usuario}">
-                        <option value=""></option>
-                        <option th:each="u : ${usuarios}" th:text="${u.nome}" th:value="${u.id}"></option>
-                    </select>
+                    <input class="form-control" type="text" id="selectUsuario" disabled>
+                    <button onclick="escolherOutroUsuario()" class="btn btn-secondary mt-3" style="height: 35px">Trocar Usuario</button>
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Data e hora</label>
-                    <input type="datetime-local" class="form-control" id="exampleInputPassword1" th:field="*{dataAgendada}">
+                    <label for="formCampoData" class="form-label">Data e hora</label>
+                    <input type="datetime-local" class="form-control" id="formCampoData" th:field="*{dataAgendada}" required>
                 </div>
                 <div class="mb-3">
                     <label for="selectTempoSessao" class="form-label">Tempo de sessão:</label>
-                    <select id="selectTempoSessao" class="form-select" aria-label="Default select example" th:field="*{tempoSessao}">
+                    <select id="selectTempoSessao" class="form-select" aria-label="Default select example" th:field="*{tempoSessao}" required>
                         <option value="10">10 Minutos</option>
                         <option value="15">15 Minutos</option>
                         <option value="20">20 Minutos</option>
@@ -31,11 +59,11 @@
                         <option value="0">Indefinido</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button id="confirmar-agendamento" type="button" class="btn btn-primary">Agendar</button>
             </form>
         </div>
     </div>
 </body>
 </div>
-
+<script src="/agendamento.js" rel="script" type="text/javascript"></script>
 </html>

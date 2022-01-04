@@ -55,6 +55,6 @@ public class AgendamentoController {
 
         repository.save(agendamento);
 
-        return "redirect:/";
+        return "redirect:/agendamento";
     }
 }
