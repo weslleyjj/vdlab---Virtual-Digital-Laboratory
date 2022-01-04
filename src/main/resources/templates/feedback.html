@@ -53,7 +53,7 @@
 <!--            </form>-->
 <!--        </div>-->
 <!--    </div>-->
-    <div class="row painel-inputs mt-2" id="painel" style="align-items: end">
+    <div class="row painel-inputs mt-2" id="painel" style="align-items: end; background-color: #06334f; border-radius: 10px">
         <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 4px; width: unset;">
             <label class="switch">
                 <input type="checkbox" class="inputButton" th:id="${input}">
@@ -62,7 +62,8 @@
             <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
         </div>
         <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(3, 0)}" style="margin: 4px; width: unset;">
-            <p class="keys"><a href="javascript:void(0);">o</a></p>
+            <p class="keys"><a href="javascript:void(0);"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+            </a></p>
             <p><small style="font-size: x-small; color: white" th:text="${'KEY' + input + ''}"></small></p>
         </div>
     </div>
