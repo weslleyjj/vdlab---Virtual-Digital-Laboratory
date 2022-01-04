@@ -12,6 +12,7 @@
     <link rel="icon" type="image/png" href="/images/favicon.ico"/>
     <link href="/libs/bootstrap.min.css" rel="stylesheet">
     <link href="/switchButton.css" rel="stylesheet">
+    <link href="/feedback.css" rel="stylesheet">
     <style>
         /* This is purely for the demo */
         .videoWindow {
@@ -33,7 +34,7 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <input type="hidden" id="placaConectada" th:value="${placa}">
 <div class="d-flex justify-content-center align-items-center videoWindow mb-2">
-    <img th:src="${urlStream}" style="width: 100%">
+    <img th:src="${urlStream}" alt="Houve um erro na obtenção das imagens da placa" style="width: 100%">
 </div>
 <div class="d-flex justify-content-center align-items-center">
     <a th:href="@{/fim-feedback}" target="_blank">
@@ -52,13 +53,17 @@
 <!--            </form>-->
 <!--        </div>-->
 <!--    </div>-->
-    <div class="row painel-inputs mt-2" id="painel">
+    <div class="row painel-inputs mt-2" id="painel" style="align-items: end">
         <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 4px; width: unset;">
             <label class="switch">
                 <input type="checkbox" class="inputButton" th:id="${input}">
                 <span class="slider"></span>
             </label>
             <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
+        </div>
+        <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(3, 0)}" style="margin: 4px; width: unset;">
+            <p class="keys"><a href="javascript:void(0);">o</a></p>
+            <p><small style="font-size: x-small; color: white" th:text="${'KEY' + input + ''}"></small></p>
         </div>
     </div>
 </div>
