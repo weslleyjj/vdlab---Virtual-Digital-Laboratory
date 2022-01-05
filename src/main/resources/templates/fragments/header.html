@@ -1,4 +1,4 @@
-<div th:fragment="header">
+<div th:fragment="header(pagina)">
     <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <head>
         <script src="/libs/jquery.min.js" rel="script" type="text/javascript"></script>
@@ -18,16 +18,16 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a th:class="${pagina == 'home'? 'nav-link active' : 'nav-link'}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/tutorial">Tutoriais</a>
+                        <a th:class="${pagina == 'tutorial'? 'nav-link active' : 'nav-link'}" href="/tutorial">Tutoriais</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/agendamento">Agendamentos</a>
+                        <a th:class="${pagina == 'agendamento'? 'nav-link active' : 'nav-link'}" href="/agendamento">Agendamentos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/carregar">Carregar projeto</a>
+                        <a th:class="${pagina == 'carregar'? 'nav-link active' : 'nav-link'}" href="/carregar">Carregar projeto</a>
                     </li>
                 </ul>
                 <span class="navbar-text">
