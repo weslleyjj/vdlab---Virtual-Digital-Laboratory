@@ -17,7 +17,7 @@ import javax.persistence.MappedSuperclass;
 @SuperBuilder
 public abstract class AbstractEntidade {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     boolean ativo;

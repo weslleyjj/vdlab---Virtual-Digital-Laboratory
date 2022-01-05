@@ -17,6 +17,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u FROM Usuario u WHERE u.email = :email")
     Usuario getUsuarioByEmail(@Param("email") String email);
 
+    @Query("SELECT u FROM Usuario u WHERE u.cpf = :cpf")
+    Usuario getUsuarioByCpf(@Param("cpf") String cpf);
+
+    @Query("SELECT r FROM Role r WHERE r.name = 'DISCENTE'")
+    Role getRolePadraoUsuario();
+
     List<Usuario> findByRolesIsAndAtivo(Role role, Boolean ativo);
 
     Usuario getByLoginEqualsAndAtivo(String login, Boolean ativo);
