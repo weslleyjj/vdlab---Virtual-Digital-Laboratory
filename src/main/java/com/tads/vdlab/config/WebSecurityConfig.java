@@ -65,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(staticResources).permitAll()
                 .antMatchers("/usuario/cadastrar").permitAll()
+                .antMatchers("/agendamento").hasAnyAuthority("DOCENTE", "ADMIN")
+                .antMatchers("/agendamento/**").hasAnyAuthority("DOCENTE", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login")
