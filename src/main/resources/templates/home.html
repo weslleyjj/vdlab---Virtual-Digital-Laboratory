@@ -24,7 +24,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="a : ${agendamentosPage}">
-                            <td data-label="Data e Hora" th:text="${a.dataAgendada}"></td>
+                            <td data-label="Data e Hora" th:text="${#temporals.format(a.dataAgendada, 'dd/MM/yyyy HH:mm')}"></td>
                             <td data-label="Tempo de sessão" th:text="${a.tempoSessao + ' Minutos'}"></td>
                             <td data-label="Cadastrante" th:text="${a.cadastrante.nome}"></td>
                         </tr>
