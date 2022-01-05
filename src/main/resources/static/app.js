@@ -1,6 +1,7 @@
 var stompClient = null;
 
 let inputs = new Array(18).fill(false);
+let buttons = new Array(4).fill(false);
 
 $(document).ready(function (){
     connect();
@@ -15,7 +16,17 @@ $(document).ready(function (){
     });
 })
 
+function pressionouBotaoUp(key){
+    buttons[key] = false;
+    let numeroComando = getNumberToSend();
+    sendCommand(numeroComando);
+}
 
+function pressionouBotaoDown(key){
+    buttons[key] = true;
+    let numeroComando = getNumberToSend();
+    sendCommand(numeroComando);
+}
 
 function getNumberToSend(){
 
@@ -24,6 +35,10 @@ function getNumberToSend(){
     inputs.forEach(function(stat, index) {
         // stat = boolean. index = indice no array
         binaryString += (stat) ? '1' : '0';
+    });
+
+    buttons.forEach(function (stat, index){
+       binaryString += (stat) ? '1' : '0';
     });
 
     // gera little endian, converte para big endian
@@ -47,9 +62,10 @@ function setConnected(connected) {
 function connect() {
     var socket = new SockJS('/controlador-placa-socket');
     stompClient = Stomp.over(socket);
+    stompClient.debug = () => {};
     stompClient.connect({}, function (frame) {
         setConnected(true);
-        console.log('Connected: ' + frame);
+        // console.log('Connected: ' + frame);
         stompClient.subscribe('/painel/comando', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
         });
@@ -61,7 +77,7 @@ function disconnect() {
         stompClient.disconnect();
     }
     setConnected(false);
-    console.log("Disconnected");
+    // console.log("Disconnected");
 }
 
 function sendName() {

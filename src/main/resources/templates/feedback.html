@@ -62,7 +62,7 @@
             <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
         </div>
         <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(3, 0)}" style="margin: 4px; width: unset;">
-            <p class="keys"><a href="javascript:void(0);"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+            <p class="keys"><a href="javascript:void(0);" th:onmousedown="'pressionouBotaoDown('+ ${input} +')'" th:onmouseup="'pressionouBotaoUp('+ ${input} +')'"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
             </a></p>
             <p><small style="font-size: x-small; color: white" th:text="${'KEY' + input + ''}"></small></p>
         </div>
