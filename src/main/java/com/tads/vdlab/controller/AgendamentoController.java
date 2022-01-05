@@ -44,7 +44,6 @@ public class AgendamentoController {
 
     @GetMapping
     public String agendamento(Model model,
-
                               @RequestParam("page") Optional<Integer> page,
                               @RequestParam("size") Optional<Integer> size){
 

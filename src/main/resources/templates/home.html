@@ -1,6 +1,7 @@
 <html lang="en">
 <head>
     <link href="/home.css" rel="stylesheet">
+    <link href="/agendamento.css" rel="stylesheet">
 </head>
 <div th:replace="~{fragments/header :: header}"></div>
 
@@ -8,7 +9,46 @@
 <div class="foto-fundo">
     <div class="pos-foto d-flex justify-content-center">
         <div class="card-principal w-75">
-
+            <div>
+                <div class="d-flex justify-content-center p-3">
+                    <h4 class="mb-3">Seus horários agendados</h4>
+                </div>
+                <div id="tabelaUsuarios" class="agendamentos" style="display: block">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Data e Hora</th>
+                            <th scope="col">Tempo de sessão</th>
+                            <th scope="col">Cadastrante</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${agendamentosPage}">
+                            <td data-label="Data e Hora" th:text="${a.dataAgendada}"></td>
+                            <td data-label="Tempo de sessão" th:text="${a.tempoSessao + ' Minutos'}"></td>
+                            <td data-label="Cadastrante" th:text="${a.cadastrante.nome}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${agendamentosPage.totalPages > 0}" class="btn-paginacao"
+                         style="display: flex; flex-wrap: wrap; width: fit-content;">
+                        <a th:each="pageNumber : ${pageNumbers}" th:href="@{/(size=${agendamentosPage.size}, page=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==agendamentosPage.number + 1} ? activePage"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <hr style="width: 95%">
+            </div>
+            <div class="">
+                <h4 style="margin-left: 50px; margin-bottom: 30px">Downloads e Manuais</h4>
+                <div class="links" style="margin-left: 80px;">
+                    <p><a download="vdlab-lib.zip" th:href="@{/download/vdlab-lib-download}" target="_blank">Biblioteca VDLAB</a></p>
+                    <p><a href="https://hamblen.ece.gatech.edu/DE2/DE2%20Reference%20Manual.pdf" target="_blank">Manual de usuário DE2</a></p>
+                    <p><a href="http://www.terasic.com.tw/attachment/archive/30/DE2_Pin_Table.pdf" target="_blank">Tabela de pinagem DE2</a></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

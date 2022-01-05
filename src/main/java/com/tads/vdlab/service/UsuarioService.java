@@ -66,10 +66,10 @@ public class UsuarioService {
             list = usuarios.subList(startItem, toIndex);
         }
 
-        Page<UsuarioDTO> pedidoPage
+        Page<UsuarioDTO> agendamentoPage
                 = new PageImpl<UsuarioDTO>(list, PageRequest.of(currentPage, pageSize), usuarios.size());
 
-        return pedidoPage;
+        return agendamentoPage;
     }
 
     public List<UsuarioDTO> findAllUsuariosDiscentes(){
