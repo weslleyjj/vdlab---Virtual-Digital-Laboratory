@@ -13,8 +13,8 @@
     <link href="/libs/bootstrap.min.css" rel="stylesheet">
     <link href="/switchButton.css" rel="stylesheet">
     <link href="/feedback.css" rel="stylesheet">
+    <link href="/home.css" rel="stylesheet">
     <style>
-        /* This is purely for the demo */
         .videoWindow {
             max-width: 600px;
             margin: 0 auto;
@@ -30,43 +30,40 @@
         }
     </style>
 </head>
-<body>
+
 <div th:replace="~{fragments/header :: header}"></div>
 <input type="hidden" id="placaConectada" th:value="${placa}">
-<div class="d-flex justify-content-center align-items-center videoWindow mb-2">
-    <img th:src="${urlStream}" alt="Houve um erro na obtenção das imagens da placa" style="width: 100%">
-</div>
-<div class="d-flex justify-content-center align-items-center">
-    <a th:href="@{/fim-feedback}" target="_blank">
-        <button  class="btn btn-danger">Parar Visualização</button>
-    </a>
-</div>
-<div id="main-content" class="container" style="display: flex; justify-content: center">
-<!--    <div class="row">-->
-<!--        <div class="col-md-6">-->
-<!--            <form class="form-inline">-->
-<!--                <div class="form-group">-->
-<!--                    <label for="connect">Conexão WebSocket:</label>-->
-<!--                    <button id="connect" class="btn btn-success" type="submit">Conectar</button>-->
-<!--                    <button id="disconnect" class="btn btn-danger" type="submit" disabled="disabled">Desconectar</button>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-    <div class="row painel-inputs mt-2" id="painel" style="align-items: end; background-color: #06334f; border-radius: 10px">
-        <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 4px; width: unset;">
-            <label class="switch">
-                <input type="checkbox" class="inputButton" th:id="${input}">
-                <span class="slider"></span>
-            </label>
-            <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
-        </div>
-        <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(3, 0)}" style="margin: 4px; width: unset;">
-            <p class="keys"><a href="javascript:void(0);" th:onmousedown="'pressionouBotaoDown('+ ${input} +')'" th:onmouseup="'pressionouBotaoUp('+ ${input} +')'"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-            </a></p>
-            <p><small style="font-size: x-small; color: white" th:text="${'KEY' + input + ''}"></small></p>
+
+<div class="foto-fundo">
+    <body>
+    <div class="pos-foto d-flex justify-content-center" style="height: max-content;">
+        <div class="card-principal w-75 p-5 justify-content-center" style="height: fit-content; margin-bottom: 30px;">
+            <div class="d-flex justify-content-center align-items-center videoWindow mb-2">
+                <img th:src="${urlStream}" alt="Houve um erro na obtenção das imagens da placa" style="width: 100%">
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <a th:href="@{/fim-feedback}" target="_blank">
+                    <button  class="btn btn-danger">Parar Visualização</button>
+                </a>
+            </div>
+            <div id="main-content" class="container" style="display: flex; justify-content: center">
+                <div class="row painel-inputs mt-2" id="painel" style="align-items: end; background-color: #06334f; border-radius: 10px">
+                    <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(17, 0)}" style="margin: 4px; width: unset;">
+                        <label class="switch">
+                            <input type="checkbox" class="inputButton" th:id="${input}">
+                            <span class="slider"></span>
+                        </label>
+                        <p><small style="font-size: x-small; color: white" th:text="${'SW' + input + ''}"></small></p>
+                    </div>
+                    <div class="justify-content-center align-items-center p-0" th:each="input : ${#numbers.sequence(3, 0)}" style="margin: 4px; width: unset;">
+                        <p class="keys"><a href="javascript:void(0);" th:onmousedown="'pressionouBotaoDown('+ ${input} +')'" th:onmouseup="'pressionouBotaoUp('+ ${input} +')'"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+                        </a></p>
+                        <p><small style="font-size: x-small; color: white" th:text="${'KEY' + input + ''}"></small></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    </body>
 </div>
-</body>
 </html>

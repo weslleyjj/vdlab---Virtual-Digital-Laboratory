@@ -1,7 +1,12 @@
 .foto-fundo {
-    background: url('/images/background-texture-default.jpg');
     background-size: 100%;
-    background-repeat: inherit;
+    background: url('/images/background-texture-default.jpg');
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    /*background-repeat: inherit;*/
 }
 
 .pos-foto {
