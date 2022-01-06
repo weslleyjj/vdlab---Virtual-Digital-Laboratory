@@ -123,18 +123,12 @@ public class UsuarioController {
     public String editarPermissoesUsuario(@ModelAttribute UsuarioDTO usuario,
                                           @RequestParam("permissoes") List<Integer> permissoes,
                                           BindingResult result, RedirectAttributes redirectAttributes) {
+        Usuario usrOriginal = usuarioRepository.findById(usuario.getId()).get();
 
         if (permissoes.isEmpty()) {
             result.addError(new ObjectError("role", "É necessário especificar no mínimo 1 permissão"));
         }
 
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuarioEscolhido", result);
-            redirectAttributes.addFlashAttribute("usuarioEscolhido", usuario);
-            return "redirect:/usuario/permissoes";
-        }
-
-        Usuario usrOriginal = usuarioRepository.findById(usuario.getId()).get();
         Set<Role> rolesEscolhidas = new HashSet<>();
         for (Integer permissao : permissoes) {
             Role teste = roleRepository.findById(permissao).get();
@@ -142,6 +136,25 @@ public class UsuarioController {
                 rolesEscolhidas.add(teste);
             }
         }
+
+        boolean flag = false;
+        for (Role rolesEscolhida : rolesEscolhidas) {
+            if(rolesEscolhida.getName().equalsIgnoreCase("DISCENTE")){
+                flag = true;
+            }
+        }
+
+        if(flag && rolesEscolhidas.size() > 1){
+            result.addError(new ObjectError("proibido", "Usuário DISCENTE não pode possuir outras permissões"));
+        }
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuarioEscolhido", result);
+            usuario.setNome(usrOriginal.getNome());
+            redirectAttributes.addFlashAttribute("usuarioEscolhido", usuario);
+            return "redirect:/usuario/permissoes";
+        }
+
         usrOriginal.setRoles(rolesEscolhidas);
 
         usuarioRepository.save(usrOriginal);
