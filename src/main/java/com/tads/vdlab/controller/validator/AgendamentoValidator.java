@@ -39,7 +39,7 @@ public class AgendamentoValidator {
         List<String> erros = new ArrayList<>();
 
         if(agendamentoRepository.countAgendamentosBetweenDates(agendamento.getDataAgendada(),
-                agendamento.getDateAfterTempoSessao(), Objects.isNull(agendamento.getId())? 0 : agendamento.getId()) > quantidadePlacas) {
+                agendamento.getDateAfterTempoSessao(), Objects.isNull(agendamento.getId())? 0 : agendamento.getId()) >= quantidadePlacas) {
             erros.add("Não há mais placas disponíveis para esse horário");
         }
 
