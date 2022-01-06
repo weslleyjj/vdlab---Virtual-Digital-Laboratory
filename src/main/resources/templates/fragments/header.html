@@ -30,13 +30,43 @@
                         <a th:class="${pagina == 'carregar'? 'nav-link active' : 'nav-link'}" href="/carregar">Carregar projeto</a>
                     </li>
                 </ul>
-                <span class="navbar-text">
-                    <form th:action="@{/logout}" method="post" class="p-0 m-0">
-                        <a onclick="this.parentNode.submit();" style="cursor: pointer">Sair</a>
-                    </form>
-                </span>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown dropstart">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Perfil
+                        </a>
+                        <ul class="dropdown-menu " aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item disabled" href="#" ><p id="perfilNome"></p></a></li>
+                            <li><a class="dropdown-item" th:href="@{'/usuario/editar'}">Editar</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="dropdown-item" style="margin-bottom: 0px" >
+                                    <a onclick="this.parentNode.submit();" style="cursor: pointer">Sair</a>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
+        <script>
+            $(document).ready(() => {
+                let perfilNome = getCookie('usuario');
+                $("#perfilNome").text(perfilNome);
+            });
+
+            function getCookie(cName) {
+                const name = cName + "=";
+                const cDecoded = decodeURIComponent(document.cookie); //to be careful
+                const cArr = cDecoded.split('; ');
+                let res;
+                cArr.forEach(val => {
+                    if (val.indexOf(name) === 0) res = val.substring(name.length);
+                })
+                return res
+            }
+        </script>
     </html>
 </div>
+

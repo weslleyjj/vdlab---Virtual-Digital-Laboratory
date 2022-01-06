@@ -65,10 +65,11 @@ public class UsuarioController {
         return "redirect:/";
     }
 
-    @GetMapping("/editar/{id}")
-    public String cadastrarUsuario(@PathVariable("id") Long id, Model model){
+    @GetMapping("/editar")
+    public String cadastrarUsuario(Model model, Principal principal){
         if(model.getAttribute("usuario") == null) {
-            Usuario usr = usuarioRepository.getById(id);
+            Usuario usuarioLogado = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
+            Usuario usr = usuarioRepository.getById(usuarioLogado.getId());
             model.addAttribute("usuario", UsuarioDTO.toDTO(usr));
         }
 
