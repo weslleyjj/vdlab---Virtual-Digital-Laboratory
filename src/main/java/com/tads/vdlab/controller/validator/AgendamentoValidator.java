@@ -9,6 +9,7 @@ import org.springframework.validation.ObjectError;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AgendamentoValidator {
 
@@ -38,12 +39,12 @@ public class AgendamentoValidator {
         List<String> erros = new ArrayList<>();
 
         if(agendamentoRepository.countAgendamentosBetweenDates(agendamento.getDataAgendada(),
-                agendamento.getDateAfterTempoSessao()) > quantidadePlacas) {
+                agendamento.getDateAfterTempoSessao(), Objects.isNull(agendamento.getId())? 0 : agendamento.getId()) > quantidadePlacas) {
             erros.add("Não há mais placas disponíveis para esse horário");
         }
 
         if(agendamentoRepository.countAgendamentosUsuarioBetweenDates(agendamento.getDataAgendada(),
-                agendamento.getDateAfterTempoSessao(), agendamento.getUsuario().getId()) > 0){
+                agendamento.getDateAfterTempoSessao(), agendamento.getUsuario().getId(), Objects.isNull(agendamento.getId())? 0 : agendamento.getId()) > 0){
             erros.add("Este usuário já possui um agendamento nesse horário");
         }
 
@@ -55,4 +56,5 @@ public class AgendamentoValidator {
 
         return erros;
     }
+
 }

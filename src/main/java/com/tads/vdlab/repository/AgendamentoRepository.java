@@ -18,13 +18,18 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     List<Agendamento> findAgendamentosByUsuarioAndAtivoOrderByDataAgendadaDesc(Usuario usuario, Boolean ativo);
 
     @Query("select count(a) from Agendamento a where a.ativo = true " +
+            "and a.id <> :idAgendamento " +
             "and (a.dataAgendada between :dataInicial and :dataExpirada)")
-    Integer countAgendamentosBetweenDates(LocalDateTime dataInicial, LocalDateTime dataExpirada);
+    Integer countAgendamentosBetweenDates(LocalDateTime dataInicial, LocalDateTime dataExpirada, Long idAgendamento);
 
-    @Query("select count(a) from Agendamento a where a.ativo = true " +
-            "and a.usuario.id = :idUsuario " +
-            "and (a.dataAgendada between :dataInicial and :dataExpirada)")
-    Integer countAgendamentosUsuarioBetweenDates(LocalDateTime dataInicial, LocalDateTime dataExpirada, Long idUsuario);
+    @Query(value = "select count(a) from agendamento a left join usuarios u on u.id = a.usuario_id " +
+            "where a.ativo = true " +
+            "and a.id <> ?4 " +
+            "and u.id = ?3 " +
+            "and ((a.data_agendada between ?1 and ?2) or " +
+            "(((a.data_agendada + (a.tempo_sessao * interval '1 minute') >= ?1)) and " +
+            "((a.data_agendada + (a.tempo_sessao * interval '1 minute') <= ?2))))", nativeQuery = true)
+    Integer countAgendamentosUsuarioBetweenDates(LocalDateTime dataInicial, LocalDateTime dataExpirada, Long idUsuario, Long idAgendamento);
 
     List<Agendamento> findAgendamentosByCadastranteAndAtivoOrderByDataAgendadaDesc(Usuario cadastrante, Boolean ativo);
 }
