@@ -1,6 +1,9 @@
 
 $(document).ready(() => {
     $("#formAgendamento").hide();
+    if($("#warning-erros").length > 0){
+        escolherUsuario($("#formCampoUsuario").val(), {value: $("#nomeUsuarioRetorno").val()});
+    }
 })
 
 $("#busca-usuario-form").on('submit',(e) => {
@@ -13,9 +16,16 @@ $("#busca-usuario-form").on('submit',(e) => {
     }
 })
 
+$("#formAgendamento").submit((e) => {
+   if($("#formCampoUsuario").val() == ''){
+       e.preventDefault();
+   }
+});
+
 function escolherUsuario(idUsuario, btn){
     $("#formCampoUsuario").val(idUsuario);
     $("#selectUsuario").val(btn.value);
+    $("#nomeUsuarioRetorno").val(btn.value);
     $("#formAgendamento").show();
     $("#tabelaUsuarios").hide();
 }
@@ -25,6 +35,7 @@ function escolherOutroUsuario(){
     $("#formAgendamento").hide();
     $("#selectUsuario").val('');
     $("#formCampoUsuario").val(null);
+    $("#warning-erros").hide();
 }
 
 $("#confirmar-agendamento").on('click', () => {

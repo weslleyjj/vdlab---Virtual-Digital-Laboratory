@@ -20,6 +20,7 @@ server:
 fpga:
   host: localhost
   port: 2540
+  quantidadePlacas: 2 # Importante editar de acordo com a quantidade de placas a serem ligadas na máquina
 
 #Configuraçao com rotas do raspberry
 feedback:

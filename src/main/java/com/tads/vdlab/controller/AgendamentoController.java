@@ -1,6 +1,8 @@
 package com.tads.vdlab.controller;
 
+import com.tads.vdlab.controller.dto.AgendamentoDTO;
 import com.tads.vdlab.controller.dto.UsuarioDTO;
+import com.tads.vdlab.controller.validator.AgendamentoValidator;
 import com.tads.vdlab.model.Agendamento;
 import com.tads.vdlab.model.Role;
 import com.tads.vdlab.model.Usuario;
@@ -10,6 +12,7 @@ import com.tads.vdlab.repository.UsuarioRepository;
 import com.tads.vdlab.service.UsuarioService;
 import com.tads.vdlab.util.UsuarioUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -30,6 +33,9 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/agendamento")
 public class AgendamentoController {
+
+    @Value("${fpga.quantidadePlacas}")
+    private Integer quantidadePlacas;
 
     private AgendamentoRepository repository;
     private UsuarioRepository usuarioRepository;
@@ -65,7 +71,9 @@ public class AgendamentoController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        model.addAttribute("agendamento", new Agendamento());
+        if(model.getAttribute("agendamento") == null){
+            model.addAttribute("agendamento", new Agendamento());
+        }
 
         return "agendamento";
     }
@@ -79,11 +87,25 @@ public class AgendamentoController {
     }
 
     @PostMapping("/agendar")
-    public String agendar(@ModelAttribute Agendamento agendamento, BindingResult result, Principal principal){
+    public String agendar(@ModelAttribute Agendamento agendamento, BindingResult result, Principal principal, RedirectAttributes redirectAttributes){
         Usuario cadastrante = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
         agendamento.setCadastrante(cadastrante);
-        agendamento.setAtivo(true);
 
+        result = AgendamentoValidator.validarAgendamento(AgendamentoDTO.toDTO(agendamento), result,
+                quantidadePlacas, repository);
+
+        if(result.hasErrors()){
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.agendamento", result);
+            AgendamentoDTO agend = AgendamentoDTO.toDTO(agendamento);
+            if(agendamento.getUsuario() != null && agendamento.getUsuario().getNome() == null){
+                Usuario u = usuarioRepository.findById(agendamento.getUsuario().getId()).get();
+                agend.setUsuario(UsuarioDTO.toDTO(u));
+            }
+            redirectAttributes.addFlashAttribute("agendamento", agend);
+            return "redirect:/agendamento";
+        }
+
+        agendamento.setAtivo(true);
         repository.save(agendamento);
 
         return "redirect:/agendamento";

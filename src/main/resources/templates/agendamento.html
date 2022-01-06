@@ -51,7 +51,11 @@
             </div>
 
             <form id="formAgendamento" class="w-75 mt-5" th:action="@{/agendamento/agendar}" method="post" th:object="${agendamento}">
-                <input type="hidden" id="formCampoUsuario" th:field="*{usuario}">
+                <div id="warning-erros" class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                    <input type="hidden" id="nomeUsuarioRetorno" th:value="${agendamento.usuario.nome}">
+                </div>
+                <input type="hidden" id="formCampoUsuario" th:field="*{usuario.id}">
                 <div class="mb-3">
                     <label for="selectUsuario" class="form-label">Usuário:</label>
                     <input class="form-control" type="text" id="selectUsuario" disabled>
