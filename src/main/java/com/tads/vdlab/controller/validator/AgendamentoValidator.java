@@ -34,22 +34,6 @@ public class AgendamentoValidator {
         return result;
     }
 
-    public static List<String> validarAgendamentoGeralRest(Agendamento agendamento, Integer quantidadePlacas,
-                                                           AgendamentoRepository agendamentoRepository) {
-        List<String> errors = new ArrayList<>();
-
-        if(agendamento.getUsuario() == null){
-            errors.add("Usuário obrigatório!");
-        }
-        if(agendamento.getDataAgendada().isBefore(LocalDateTime.now())){
-            errors.add("Data escolhida inválida!");
-        }
-
-        errors = validarAgendamentoBanco(agendamento, quantidadePlacas, agendamentoRepository);
-
-        return errors;
-    }
-
     public static List<String> validarAgendamentoBanco(Agendamento agendamento, Integer quantidadePlacas, AgendamentoRepository agendamentoRepository){
         List<String> erros = new ArrayList<>();
 

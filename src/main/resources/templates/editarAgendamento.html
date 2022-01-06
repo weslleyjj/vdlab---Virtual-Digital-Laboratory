@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <link href="/home.css" rel="stylesheet">
+    <link href="/agendamento.css" rel="stylesheet">
+</head>
+<div th:replace="~{fragments/header :: header('agendamento')}"></div>
+<div class="foto-fundo">
+    <body>
+    <div class="pos-foto d-flex justify-content-center">
+        <div class="card-principal w-75 p-5 justify-content-center" style="overflow-y: auto">
+            <div class="d-flex justify-content-center">
+                <h4 class="mb-3">Editar Agendamento</h4>
+            </div>
+            <form id="formAgendamento" class="w-75 mt-5" th:action="@{/agendamento/editarAgendamento}" method="post" th:object="${agendamento}">
+                <div id="warning-erros" class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                </div>
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" id="formCampoUsuario" th:field="*{usuario.id}">
+                <div class="mb-3">
+                    <label for="selectUsuario" class="form-label">Usuário:</label>
+                    <input class="form-control" type="text" th:value="*{usuario.nome}" id="selectUsuario" disabled>
+                </div>
+                <div class="mb-3">
+                    <p id="dataRecebida" style="display: none" th:text="*{dataAgendada}"></p>
+                    <label for="formCampoData" class="form-label">Data e hora</label>
+                    <input type="datetime-local" class="form-control" id="formCampoData" th:field="*{dataAgendada}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="selectTempoSessao" class="form-label">Tempo de sessão:</label>
+                    <select id="selectTempoSessao" class="form-select" aria-label="Default select example" th:field="*{tempoSessao}" required>
+                        <option value="10">10 Minutos</option>
+                        <option value="15">15 Minutos</option>
+                        <option value="20">20 Minutos</option>
+                        <option value="25">25 Minutos</option>
+                        <option value="30">30 Minutos</option>
+                    </select>
+                </div>
+                <button id="confirmar-agendamento" type="button" class="btn btn-primary">Editar Agendamento</button>
+            </form>
+        </div>
+    </div>
+    </body>
+</div>
+<script>
+    $(document).ready(() => {
+        $("#formCampoData").val($("#dataRecebida").text());
+    });
+
+    $("#confirmar-agendamento").on('click', () => {
+        Swal.fire({
+            icon: 'question',
+            title: 'Confirmar o agendamento?',
+            html: getDadosAgendamento(),
+            showDenyButton: true,
+            confirmButtonText: `Cadastrar`,
+            denyButtonText: `Cancelar`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("formAgendamento").submit();
+            }
+        })
+    });
+
+    function getDadosAgendamento(){
+        let texto = '';
+        let dataAgendada = $("#formCampoData").val().split('-');
+        let diaHora = dataAgendada[2].split('T');
+        let dataFormatada = diaHora[0] + '/' + dataAgendada[1] + '/' + dataAgendada[0] + ' às ' + diaHora[1];
+        let tempoSessao = $("#selectTempoSessao").val();
+
+        texto += '<p> Usuário escolhido: \n';
+        texto += $("#selectUsuario").val() + '</p>';
+        texto += '<p> Horário: \n';
+        texto += dataFormatada + '</p>';
+        texto += '<p> Tempo de sessão: \n';
+        texto += tempoSessao == 0 ? 'Tempo livre' : tempoSessao + ' Minutos'  + '</p>';
+
+        return texto;
+    }
+</script>
+</html>

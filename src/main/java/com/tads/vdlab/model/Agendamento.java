@@ -36,4 +36,8 @@ public class Agendamento extends AbstractEntidade{
         aux.plusMinutes(tempoSessao);
         return aux.isBefore(LocalDateTime.now());
     }
+
+    public LocalDateTime getDateAfterTempoSessao(){
+        return dataAgendada.plusMinutes(tempoSessao);
+    }
 }

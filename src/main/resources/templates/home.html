@@ -62,10 +62,13 @@
                             <td data-label="Tempo de sessão" th:text="${a.tempoSessao + ' Minutos'}"></td>
                             <td data-label="Expirado" th:text="${a.isAgendamentoExpirado() ? 'Sim' : 'Não'}"></td>
                             <td data-label="Ações">
-                                <button type="button" class="btn btn-primary" style="margin: 5px; padding: 5px;">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    Editar
-                                </button>
+                                <a th:href="${'/agendamento/editar/'+ a.id}">
+                                    <button type="button" class="btn btn-primary" style="margin: 5px; padding: 5px;">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        Editar
+                                    </button>
+                                </a>
+
                                 <button type="button" class="btn btn-danger" style="margin: 5px; padding: 5px;">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                     Excluir

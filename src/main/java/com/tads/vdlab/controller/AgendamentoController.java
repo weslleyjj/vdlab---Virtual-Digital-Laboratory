@@ -78,6 +78,41 @@ public class AgendamentoController {
         return "agendamento";
     }
 
+    @GetMapping("/editar/{id}")
+    public String editarAgendamento(@PathVariable("id") Long id, Model model){
+        if(model.getAttribute("agendamento") == null){
+            Agendamento agend = repository.getById(id);
+            model.addAttribute("agendamento", AgendamentoDTO.toDTO(agend));
+        }
+
+        return "editarAgendamento";
+    }
+
+    @PostMapping("/editarAgendamento")
+    public String editarAgendamento(@ModelAttribute Agendamento agendamento, BindingResult result, Principal principal, RedirectAttributes redirectAttributes){
+        Usuario cadastrante = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
+        agendamento.setCadastrante(cadastrante);
+
+        result = AgendamentoValidator.validarAgendamento(AgendamentoDTO.toDTO(agendamento), result,
+                quantidadePlacas, repository);
+
+        if(result.hasErrors()){
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.agendamento", result);
+            AgendamentoDTO agend = AgendamentoDTO.toDTO(agendamento);
+            if(agendamento.getUsuario() != null && agendamento.getUsuario().getNome() == null){
+                Usuario u = usuarioRepository.findById(agendamento.getUsuario().getId()).get();
+                agend.setUsuario(UsuarioDTO.toDTO(u));
+            }
+            redirectAttributes.addFlashAttribute("agendamento", agend);
+            return "redirect:/agendamento/editar/"+agendamento.getId();
+        }
+
+        agendamento.setAtivo(true);
+        repository.save(agendamento);
+
+        return "redirect:/";
+    }
+
     @GetMapping("/buscaUsuario")
     public String buscaUsuarioAgendamento(@RequestParam("nome") String busca, Model model, RedirectAttributes redirectAttributes){
 
@@ -110,4 +145,6 @@ public class AgendamentoController {
 
         return "redirect:/agendamento";
     }
+
+
 }
