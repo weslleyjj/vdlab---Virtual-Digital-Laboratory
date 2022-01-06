@@ -23,6 +23,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT r FROM Role r WHERE r.name = 'DISCENTE'")
     Role getRolePadraoUsuario();
 
+    List<Usuario> findByAtivo(Boolean ativo);
+
     List<Usuario> findByRolesIsAndAtivo(Role role, Boolean ativo);
 
     Usuario getByLoginEqualsAndAtivo(String login, Boolean ativo);

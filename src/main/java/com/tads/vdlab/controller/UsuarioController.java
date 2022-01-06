@@ -1,11 +1,17 @@
 package com.tads.vdlab.controller;
 
+import com.tads.vdlab.controller.dto.AgendamentoDTO;
 import com.tads.vdlab.controller.dto.UsuarioDTO;
+import com.tads.vdlab.controller.validator.AgendamentoValidator;
 import com.tads.vdlab.model.Agendamento;
 import com.tads.vdlab.model.Role;
 import com.tads.vdlab.model.Usuario;
+import com.tads.vdlab.repository.RoleRepository;
 import com.tads.vdlab.repository.UsuarioRepository;
+import com.tads.vdlab.service.UsuarioService;
 import com.tads.vdlab.util.UsuarioUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,21 +21,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
 
     private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
+    private RoleRepository roleRepository;
     private BCryptPasswordEncoder crypt;
 
-    public UsuarioController(UsuarioRepository usuarioRepository){
+    public UsuarioController(UsuarioRepository usuarioRepository, UsuarioService usuarioService, RoleRepository roleRepository){
         crypt = new BCryptPasswordEncoder();
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/cadastrar")
@@ -76,6 +85,77 @@ public class UsuarioController {
         model.addAttribute("message", model.getAttribute("message"));
 
         return "editarUsuario";
+    }
+
+    @GetMapping("/permissoes")
+    public String editarPermissoes(Model model,
+                                   @RequestParam("page") Optional<Integer> page,
+                                   @RequestParam("size") Optional<Integer> size){
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+        Page<UsuarioDTO> usuarioPage;
+        boolean isBusca = model.containsAttribute("busca");
+        String nomeBusca = model.containsAttribute("nomeBusca") ? (String) model.getAttribute("nomeBusca") : null;
+
+        usuarioPage = usuarioService.findAllPaginated(PageRequest.of(currentPage - 1, pageSize), isBusca, nomeBusca);
+
+        model.addAttribute("usuariosPage", usuarioPage);
+
+        int totalPages = usuarioPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        if(model.getAttribute("usuarioEscolhido") == null){
+            model.addAttribute("usuarioEscolhido", new UsuarioDTO());
+        }
+
+        model.addAttribute("rolesPossiveis", roleRepository.findAll());
+
+        return "editarPermissoesUsuario";
+    }
+
+    @PostMapping("/editarPermissaoUsuario")
+    public String editarPermissoesUsuario(@ModelAttribute UsuarioDTO usuario,
+                                          @RequestParam("permissoes") List<Integer> permissoes,
+                                          BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (permissoes.isEmpty()) {
+            result.addError(new ObjectError("role", "É necessário especificar no mínimo 1 permissão"));
+        }
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuarioEscolhido", result);
+            redirectAttributes.addFlashAttribute("usuarioEscolhido", usuario);
+            return "redirect:/usuario/permissoes";
+        }
+
+        Usuario usrOriginal = usuarioRepository.findById(usuario.getId()).get();
+        Set<Role> rolesEscolhidas = new HashSet<>();
+        for (Integer permissao : permissoes) {
+            Role teste = roleRepository.findById(permissao).get();
+            if(teste != null){
+                rolesEscolhidas.add(teste);
+            }
+        }
+        usrOriginal.setRoles(rolesEscolhidas);
+
+        usuarioRepository.save(usrOriginal);
+
+        redirectAttributes.addFlashAttribute("operacaoSucesso", true);
+        return "redirect:/usuario/permissoes";
+    }
+
+    @GetMapping("/buscaUsuario")
+    public String buscaUsuarioAgendamento(@RequestParam("nome") String busca, Model model, RedirectAttributes redirectAttributes){
+
+        redirectAttributes.addFlashAttribute("nomeBusca", busca);
+        redirectAttributes.addFlashAttribute("busca", true);
+        return "redirect:/usuario/permissoes";
     }
 
     @PostMapping("/editarUsuario")
@@ -129,30 +209,28 @@ public class UsuarioController {
         return "redirect:/";
     }
 
-    private List<String> validarUsuario(Usuario usuario, boolean editar){
+    private List<String> validarUsuario(Usuario usuario, boolean editar) {
         List<String> erros = new ArrayList<>();
         Usuario usrAux = usuarioRepository.getUsuarioByLogin(usuario.getLogin());
 
-        if(!editar && usrAux != null) {
+        if (!editar && usrAux != null) {
             erros.add("Este login já está sendo utilizado!");
         }
 
         usrAux = usuarioRepository.getUsuarioByEmail(usuario.getEmail());
-        if(!editar && usrAux != null) {
+        if (!editar && usrAux != null) {
             erros.add("Email já cadastrado no sistema!");
         }
 
         usrAux = usuarioRepository.getUsuarioByCpf(usuario.getCpf());
-        if(!editar && usrAux != null) {
+        if (!editar && usrAux != null) {
             erros.add("Cpf já cadastrado!");
         }
 
-        if(editar && usuario.getNome().strip().length() < 5) {
+        if (editar && usuario.getNome().strip().length() < 5) {
             erros.add("Nome muito curto");
         }
 
         return erros;
     }
-
-
 }

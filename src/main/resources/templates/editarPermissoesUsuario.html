@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <link href="/home.css" rel="stylesheet">
+    <link href="/agendamento.css" rel="stylesheet">
+</head>
+<div th:replace="~{fragments/header :: header('perfil')}"></div>
+
+<div class="foto-fundo">
+    <body>
+    <div class="pos-foto d-flex justify-content-center">
+        <div class="card-principal w-75 p-5 justify-content-center" style="overflow-y: auto">
+            <p th:if="${operacaoSucesso}" style="display: none" id="operacaoSucesso"></p>
+            <div class="d-flex justify-content-center">
+                <h4 class="mb-3">Alterar permissões do usuário</h4>
+            </div>
+            <div id="tabelaUsuarios" style="display: block">
+                <div class="d-flex justify-content-between">
+                    <h4 class="mb-3 mr-3">Escolha um usuario</h4>
+                    <form method="get" id="busca-usuario-form" class="mb-3 d-flex justify-content-center">
+                        <input class="form-control" type="text" id="buscaUsuario" placeholder="Filtrar por nome">
+                        <button type="submit" class="btn btn-outline-primary" style="margin-left: 10px">Buscar</button>
+                    </form>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Contato</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Permissões</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${usuariosPage}">
+                        <td data-label="Nome" th:text="${u.nome}"></td>
+                        <td data-label="Contato" th:text="${u.contato}"></td>
+                        <td data-label="Email" th:text="${u.email}"></td>
+                        <td data-label="Permissões">
+                            <span th:each="role :${u.roles}" th:text="${role.name + ' '}"></span>
+                        </td>
+                        <td data-label="">
+                            <button th:onclick="'escolherUsuario(' + ${ u.id } +', this)'" th:value="${u.nome}" class="btn btn-primary">Escolher</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${usuariosPage.totalPages > 0}" class="btn-paginacao"
+                     style="display: flex; flex-wrap: wrap; width: fit-content;">
+                    <a th:each="pageNumber : ${pageNumbers}" th:href="@{/usuario/permissoes(size=${usuariosPage.size}, page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:class="${pageNumber==usuariosPage.number + 1} ? activePage"></a>
+                </div>
+            </div>
+
+            <form id="formPermissoes" class="w-75 mt-5" th:action="@{/usuario/editarPermissaoUsuario}" method="post" th:object="${usuarioEscolhido}">
+                <div id="warning-erros" class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                    <input type="hidden" id="nomeUsuarioRetorno" th:value="${usuarioEscolhido.nome}">
+                </div>
+                <input type="hidden" id="formCampoUsuario" th:field="*{id}">
+                <div class="mb-3">
+                    <label for="selectUsuario" class="form-label">Usuário:</label>
+                    <input class="form-control" type="text" id="selectUsuario" disabled>
+                    <button onclick="escolherOutroUsuario()" class="btn btn-secondary mt-3" style="height: 35px">Trocar Usuario</button>
+                </div>
+                <div class="mb-3" id="divPermissoes">
+                    <p style="margin: 20px 0 20px 0"><strong>Escolha as permissões</strong></p>
+                    <th:block th:each="role :${rolesPossiveis}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissoes" th:value="${role.id}">
+                            <label class="form-check-label" style="margin-right: 10px" th:text="${role.name}">
+                            </label>
+                        </div>
+                    </th:block>
+                    <p id="spanError" style="color: firebrick; display: none">Necessário escolher pelo menos 1 permissão</p>
+                </div>
+                <button id="confirmar-permissoes" type="submit" class="btn btn-primary" style="margin-top: 30px">Atualizar Permissões</button>
+            </form>
+        </div>
+    </div>
+    </body>
+</div>
+<script src="/editarPermissoes.js" rel="script" type="text/javascript"></script>
+</html>

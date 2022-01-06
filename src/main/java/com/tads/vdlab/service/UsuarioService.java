@@ -78,4 +78,47 @@ public class UsuarioService {
                 .stream().map(UsuarioDTO::toDTO).collect(Collectors.toList());
     }
 
+    public Page<UsuarioDTO> findAllPaginated(Pageable pageable, boolean busca, String nomeBusca) {
+
+        List<Usuario> usuariosBanco = usuarioRepository.findByAtivo(true);
+        List<Usuario> usuarios =  new ArrayList<>();
+
+        if(busca && nomeBusca != null){
+            Pattern pattern = Pattern.compile(nomeBusca, Pattern.CASE_INSENSITIVE);
+
+            if (!usuariosBanco.isEmpty()) {
+                Matcher matcher;
+                boolean matchFound;
+                for(Usuario usr: usuariosBanco) {
+                    matcher = pattern.matcher(usr.getNome());
+                    matchFound = matcher.find();
+                    if (matchFound) {
+                        usuarios.add(usr);
+                    }
+                }
+            }
+        } else {
+            usuarios = usuariosBanco;
+        }
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<UsuarioDTO> list;
+
+        if (usuarios.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, usuarios.size());
+            list = usuarios.stream().map(UsuarioDTO::toDTO)
+                    .collect(Collectors.toList())
+                    .subList(startItem, toIndex);
+        }
+
+        Page<UsuarioDTO> agendamentoPage
+                = new PageImpl<UsuarioDTO>(list, PageRequest.of(currentPage, pageSize), usuarios.size());
+
+        return agendamentoPage;
+    }
+
 }
