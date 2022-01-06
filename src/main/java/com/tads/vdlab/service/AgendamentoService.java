@@ -36,7 +36,7 @@ public class AgendamentoService {
 
     public Page<Agendamento> findPaginated(Pageable pageable, Usuario usuario) {
 
-        List<Agendamento> agendamentos = agendamentoRepository.findAgendamentosByUsuarioAndAtivo(usuario, true);
+        List<Agendamento> agendamentos = agendamentoRepository.findAgendamentosByUsuarioAndAtivoOrderByDataAgendadaDesc(usuario, true);
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();

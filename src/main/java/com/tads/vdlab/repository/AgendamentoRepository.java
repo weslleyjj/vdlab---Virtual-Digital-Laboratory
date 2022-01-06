@@ -15,7 +15,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     @Query("select a from Agendamento a where a.usuario.id = :idUsuario")
     List<Agendamento> buscarAgendamentoByIdUsuario(Long idUsuario);
 
-    List<Agendamento> findAgendamentosByUsuarioAndAtivo(Usuario usuario, Boolean ativo);
+    List<Agendamento> findAgendamentosByUsuarioAndAtivoOrderByDataAgendadaDesc(Usuario usuario, Boolean ativo);
 
     @Query("select count(a) from Agendamento a where a.ativo = true " +
             "and (a.dataAgendada between :dataInicial and :dataExpirada)")
