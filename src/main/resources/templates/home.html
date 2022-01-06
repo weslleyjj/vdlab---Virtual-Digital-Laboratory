@@ -9,6 +9,7 @@
 <div class="foto-fundo">
     <div class="pos-foto d-flex justify-content-center">
         <div class="card-principal" style="width: 90%; overflow-y: auto">
+            <p th:if="${operacaoSucesso}" style="display: none" id="operacaoSucesso"></p>
             <div sec:authorize="hasAnyAuthority('DISCENTE')">
                 <div class="d-flex justify-content-center p-3">
                     <h4 class="mb-3">Seus horários agendados</h4>
@@ -100,5 +101,5 @@
     </div>
 </div>
 </body>
-
+<script src="/home.js" rel="script" type="text/javascript"></script>
 </html>

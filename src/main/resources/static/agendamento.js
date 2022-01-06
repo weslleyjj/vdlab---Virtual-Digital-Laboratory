@@ -1,5 +1,13 @@
 
 $(document).ready(() => {
+    if($("#operacaoSucesso").length > 0){
+        Swal.fire({
+            icon: 'success',
+            title: 'Operação realizada com sucesso!',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    }
     $("#formAgendamento").hide();
     if($("#warning-erros").length > 0){
         escolherUsuario($("#formCampoUsuario").val(), {value: $("#nomeUsuarioRetorno").val()});

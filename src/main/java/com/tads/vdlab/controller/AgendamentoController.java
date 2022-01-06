@@ -110,6 +110,7 @@ public class AgendamentoController {
         agendamento.setAtivo(true);
         repository.save(agendamento);
 
+        redirectAttributes.addFlashAttribute("operacaoSucesso", true);
         return "redirect:/";
     }
 
@@ -143,6 +144,7 @@ public class AgendamentoController {
         agendamento.setAtivo(true);
         repository.save(agendamento);
 
+        redirectAttributes.addFlashAttribute("operacaoSucesso", true);
         return "redirect:/agendamento";
     }
 
