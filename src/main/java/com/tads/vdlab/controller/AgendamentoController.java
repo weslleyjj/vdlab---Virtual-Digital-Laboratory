@@ -148,5 +148,21 @@ public class AgendamentoController {
         return "redirect:/agendamento";
     }
 
+    @RequestMapping(value = "/deletar/{id}")
+    public String deletarProduto(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
+        Optional<Agendamento> agendamentoOptional =repository.findById(id);
+
+        if (!agendamentoOptional.isPresent()) {
+            return "redirect:/error";
+        }
+
+        Agendamento agendamento = agendamentoOptional.get();
+        agendamento.setAtivo(false);
+        repository.save(agendamento);
+
+        redirectAttributes.addFlashAttribute("operacaoSucesso", true);
+        return "redirect:/";
+    }
+
 
 }
