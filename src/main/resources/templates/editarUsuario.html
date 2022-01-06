@@ -1,0 +1,127 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link href="/home.css" rel="stylesheet">
+    <link href="/agendamento.css" rel="stylesheet">
+    <script src="/libs/jquery.mask.min.js" rel="script" type="text/javascript"></script>
+    <style>
+        .foto-fundo {
+            background-size: 100%;
+            background: url('/images/background-texture-default.jpg');
+            min-height: 100%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            /*background-repeat: inherit;*/
+        }
+
+        .pos-foto {
+            background-color: rgba(194, 194, 194, 0.9);
+            height: 100vh;
+        }
+
+        .card-principal{
+            /*width: 90%;*/
+            background: white;
+            margin: 30px 0px 50px 0px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+    </style>
+</head>
+<div th:replace="~{fragments/header :: header('home')}"></div>
+
+<div class="foto-fundo">
+    <body>
+    <div class="pos-foto d-flex justify-content-center">
+        <div class="card-principal w-75 p-5 justify-content-center" style="overflow-y: auto">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <h3>Alterar suas informações de usuário</h3>
+                </div>
+                <div class="alert alert-danger" th:if="${message != null and message.size() > 0}">
+                    <p th:each="err : ${message}" th:text="${err}"></p>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <form id="formUsuario" class="w-75 mt-5" th:action="@{/usuario/editarUsuario}" method="post" th:object="${usuario}">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="row d-flex justify-content-center mb-2">
+                            <div class="col-12 col-md-6">
+                                <label for="nome" class="form-label">Nome:</label>
+                                <input class="form-control" id="nome" type="text" th:field="*{nome}" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="cpf" class="form-label">CPF:</label>
+                                <input class="form-control" id="cpf" type="text" th:field="*{cpf}" required>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-2">
+                            <div class="col-12 col-md-6">
+                                <label for="contato" class="form-label">Contato:</label>
+                                <input class="form-control" id="contato" type="text" th:field="*{contato}" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="email" class="form-label">Email:</label>
+                                <input class="form-control" id="email" name="email" type="email" th:field="*{email}" required>
+                            </div>
+                        </div>
+                        <div class="row d-flex mb-2 align-content-end">
+                            <div class="col-12 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkboxMudarSenha" name="trocarSenha">
+                                    <label class="form-check-label" for="checkboxMudarSenha">
+                                        Alterar Senha
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4" id="divSenhaAtual" style="display:none;">
+                                <label for="senha" class="form-label">Senha Atual:</label>
+                                <input class="form-control" id="senha" type="password" name="senha">
+                            </div>
+                            <div class="col-12 col-md-4" id="divNovaSenha" style="display:none;">
+                                <label for="confirmarSenha" class="form-label">Nova Senha:</label>
+                                <input class="form-control" id="confirmarSenha" type="password" name="novaSenha">
+                            </div>
+                        </div>
+                        <div class="pt-3">
+                            <button id="confirmar-cadastro" type="submit" class="btn btn-primary">Alterar meus dados</button>
+                            <a href="/"><button type="button" class="btn btn-danger">Cancelar</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</div>
+<script>
+    $(document).ready(() => {
+        $("#cpf").mask('000.000.000-00', {reverse: true});
+        $("#contato").mask('00 0 0000-0000', {reverse: true});
+    });
+    // $("#formUsuario").submit((e) => {
+    //
+    // });
+
+    $("#checkboxMudarSenha").change((val) => {
+        let check = val.target.checked;
+
+        if(check) {
+            $("#divSenhaAtual").show();
+            $("#divNovaSenha").show();
+
+            $("#senha").prop('required', true);
+            $("#confirmarSenha").prop('required', true);
+
+            $("#checkboxMudarSenha").val(true);
+        } else {
+            $("#divSenhaAtual").hide();
+            $("#divNovaSenha").hide();
+
+            $("#senha").prop('required', false);
+            $("#confirmarSenha").prop('required', false);
+        }
+    });
+
+</script>
+</html>

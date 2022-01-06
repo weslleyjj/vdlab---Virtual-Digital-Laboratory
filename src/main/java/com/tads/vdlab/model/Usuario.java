@@ -20,6 +20,11 @@ public class Usuario extends AbstractPessoa {
     private String login;
     private String senha;
 
+    @Transient
+    private Boolean trocarSenha;
+    @Transient
+    private String novaSenha;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
