@@ -50,10 +50,10 @@
     $("#confirmar-agendamento").on('click', () => {
         Swal.fire({
             icon: 'question',
-            title: 'Confirmar o agendamento?',
+            title: 'Editar o agendamento?',
             html: getDadosAgendamento(),
             showDenyButton: true,
-            confirmButtonText: `Cadastrar`,
+            confirmButtonText: `Editar`,
             denyButtonText: `Cancelar`
         }).then((result) => {
             if (result.isConfirmed) {
