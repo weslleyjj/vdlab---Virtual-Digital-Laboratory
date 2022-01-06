@@ -30,4 +30,10 @@ public class Agendamento extends AbstractEntidade{
     private Usuario cadastrante;
 
     private Integer tempoSessao; // Tempo da sessão em minutos
+
+    public boolean isAgendamentoExpirado(){
+        LocalDateTime aux = dataAgendada;
+        aux.plusMinutes(tempoSessao);
+        return aux.isBefore(LocalDateTime.now());
+    }
 }

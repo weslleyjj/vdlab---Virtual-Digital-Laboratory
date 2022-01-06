@@ -2,6 +2,7 @@ package com.tads.vdlab.controller;
 
 import com.tads.vdlab.controller.dto.UsuarioDTO;
 import com.tads.vdlab.model.Agendamento;
+import com.tads.vdlab.model.Role;
 import com.tads.vdlab.model.Usuario;
 import com.tads.vdlab.repository.UsuarioRepository;
 import com.tads.vdlab.service.AgendamentoService;
@@ -68,7 +69,11 @@ public class HomeController {
         int pageSize = size.orElse(5);
         Page<Agendamento> agendamentoPage;
 
-        agendamentoPage = agendamentoService.findPaginated(PageRequest.of(currentPage - 1, pageSize), UsuarioUtil.getUsuarioLogado(principal, usuarioRepository));
+        if(isUsuarioAdminOrDocente(principal)) {
+            agendamentoPage = agendamentoService.findPaginatedCadastrados(PageRequest.of(currentPage - 1, pageSize), UsuarioUtil.getUsuarioLogado(principal, usuarioRepository));
+        } else {
+            agendamentoPage = agendamentoService.findPaginated(PageRequest.of(currentPage - 1, pageSize), UsuarioUtil.getUsuarioLogado(principal, usuarioRepository));
+        }
 
         model.addAttribute("agendamentosPage", agendamentoPage);
 
@@ -152,6 +157,18 @@ public class HomeController {
                 }
             }
         }
+        return false;
+    }
+
+    private boolean isUsuarioAdminOrDocente(Principal principal){
+        Usuario usr = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
+
+        for (Role role : usr.getRoles()) {
+            if(role.getName().equalsIgnoreCase("ADMIN") || role.getName().equalsIgnoreCase("DOCENTE")) {
+                return true;
+            }
+        }
+
         return false;
     }
 

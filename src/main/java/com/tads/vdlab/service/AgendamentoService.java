@@ -56,4 +56,26 @@ public class AgendamentoService {
         return agendamentoPage;
     }
 
+    public Page<Agendamento> findPaginatedCadastrados(Pageable pageable, Usuario usuario) {
+
+        List<Agendamento> agendamentos = agendamentoRepository.findAgendamentosByCadastranteAndAtivoOrderByDataAgendadaDesc(usuario, true);
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Agendamento> list;
+
+        if (agendamentos.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, agendamentos.size());
+            list = agendamentos.subList(startItem, toIndex);
+        }
+
+        Page<Agendamento> agendamentoPage
+                = new PageImpl<Agendamento>(list, PageRequest.of(currentPage, pageSize), agendamentos.size());
+
+        return agendamentoPage;
+    }
+
 }

@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <link href="/home.css" rel="stylesheet">
     <link href="/agendamento.css" rel="stylesheet">
@@ -8,8 +8,8 @@
 <body>
 <div class="foto-fundo">
     <div class="pos-foto d-flex justify-content-center">
-        <div class="card-principal w-75">
-            <div>
+        <div class="card-principal" style="width: 90%; overflow-y: auto">
+            <div sec:authorize="hasAnyAuthority('DISCENTE')">
                 <div class="d-flex justify-content-center p-3">
                     <h4 class="mb-3">Seus horários agendados</h4>
                 </div>
@@ -19,14 +19,58 @@
                         <tr>
                             <th scope="col">Data e Hora</th>
                             <th scope="col">Tempo de sessão</th>
+                            <th scope="col">Expirado</th>
                             <th scope="col">Cadastrante</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="a : ${agendamentosPage}">
+                        <tr th:each="a : ${agendamentosPage.content}">
                             <td data-label="Data e Hora" th:text="${#temporals.format(a.dataAgendada, 'dd/MM/yyyy HH:mm')}"></td>
                             <td data-label="Tempo de sessão" th:text="${a.tempoSessao + ' Minutos'}"></td>
+                            <td data-label="Expirado" th:text="${a.isAgendamentoExpirado() ? 'Sim' : 'Não'}"></td>
                             <td data-label="Cadastrante" th:text="${a.cadastrante.nome}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${agendamentosPage.totalPages > 0}" class="btn-paginacao"
+                         style="display: flex; flex-wrap: wrap; width: fit-content;">
+                        <a th:each="pageNumber : ${pageNumbers}" th:href="@{/(size=${agendamentosPage.size}, page=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==agendamentosPage.number + 1} ? activePage"></a>
+                    </div>
+                </div>
+            </div>
+            <div sec:authorize="hasAnyAuthority('DOCENTE', 'ADMIN')">
+                <div class="d-flex justify-content-center p-3">
+                    <h4 class="mb-3">Agendamentos que você realizou</h4>
+                </div>
+                <div id="tabelaAgendamentos" class="agendamentos">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Usuário</th>
+                            <th scope="col">Data e Hora</th>
+                            <th scope="col">Tempo de sessão</th>
+                            <th scope="col">Expirado</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${agendamentosPage.content}">
+                            <td data-label="Usuário" th:text="${a.usuario.nome}"></td>
+                            <td data-label="Data e Hora" th:text="${#temporals.format(a.dataAgendada, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td data-label="Tempo de sessão" th:text="${a.tempoSessao + ' Minutos'}"></td>
+                            <td data-label="Expirado" th:text="${a.isAgendamentoExpirado() ? 'Sim' : 'Não'}"></td>
+                            <td data-label="Ações">
+                                <button type="button" class="btn btn-primary" style="margin: 5px; padding: 5px;">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    Editar
+                                </button>
+                                <button type="button" class="btn btn-danger" style="margin: 5px; padding: 5px;">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                    Excluir
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
