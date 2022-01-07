@@ -19,6 +19,7 @@ public class Usuario extends AbstractPessoa {
 
     private String login;
     private String senha;
+    private String codigoPlaca;
 
     @Transient
     private Boolean trocarSenha;

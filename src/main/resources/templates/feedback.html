@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/header :: header('feedback')}"></div>
 <head>
     <meta charset="UTF-8">
     <title>Feedback - FPGA</title>
-    <script src="/libs/jquery.min.js" rel="script" type="text/javascript"></script>
     <script src="/app.js" rel="script" type="text/javascript"></script>
     <script src="/libs/sockjs.min.js" rel="script" type="text/javascript"></script>
     <script src="/libs/stomp.min.js" rel="script" type="text/javascript"></script>
-    <script src="/libs/bootstrap.min.js" rel="script" type="text/javascript"></script>
     <script src="/feedback.js" rel="script" type="text/javascript"></script>
-    <link rel="icon" type="image/png" href="/images/favicon.ico"/>
-    <link href="/libs/bootstrap.min.css" rel="stylesheet">
     <link href="/switchButton.css" rel="stylesheet">
     <link href="/feedback.css" rel="stylesheet">
     <link href="/home.css" rel="stylesheet">
@@ -30,8 +27,6 @@
         }
     </style>
 </head>
-
-<div th:replace="~{fragments/header :: header('feedback')}"></div>
 <input type="hidden" id="placaConectada" th:value="${placa}">
 
 <div class="foto-fundo">

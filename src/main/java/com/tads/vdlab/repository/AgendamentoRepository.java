@@ -12,8 +12,11 @@ import java.util.List;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    @Query("select a from Agendamento a where a.usuario.id = :idUsuario")
-    List<Agendamento> buscarAgendamentoByIdUsuario(Long idUsuario);
+    @Query(value = "select count(a) from agendamento a left join usuarios u on u.id = a.usuario_id " +
+            "where a.ativo = true " +
+            "and u.id = ?1 " +
+            "and (?2 between a.data_agendada and (a.data_agendada + (a.tempo_sessao * interval '1 minute'))) ", nativeQuery = true)
+    Integer buscarAgendamentoByIdUsuario(Long idUsuario, LocalDateTime dataAtual);
 
     List<Agendamento> findAgendamentosByUsuarioAndAtivoOrderByDataAgendadaDesc(Usuario usuario, Boolean ativo);
 
@@ -33,4 +36,10 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     Integer countAgendamentosUsuarioBetweenDates(LocalDateTime dataInicial, LocalDateTime dataExpirada, Long idUsuario, Long idAgendamento);
 
     List<Agendamento> findAgendamentosByCadastranteAndAtivoOrderByDataAgendadaDesc(Usuario cadastrante, Boolean ativo);
+
+    @Query(value = "select count(a) from agendamento a left join usuarios u on u.id = a.usuario_id " +
+            "where a.ativo = true " +
+            "and u.id = ?1 " +
+            "and ?2 not between a.data_agendada and (a.data_agendada + (a.tempo_sessao * interval '1 minute'))", nativeQuery = true)
+    Integer buscarAgendamentoEntrePeriodoUsuario(Long idUsuario, LocalDateTime data);
 }

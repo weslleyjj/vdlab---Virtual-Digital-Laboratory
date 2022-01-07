@@ -42,7 +42,7 @@ public class ScriptUtil {
     }
 
     public static List<String> executaComandoShellArray(String[] comando) throws IOException {
-        logger.info("Executando: " + comando);
+        logger.info("Executando: " + comando.toString());
         Runtime rt = Runtime.getRuntime();
         Process proc = rt.exec(comando);
 

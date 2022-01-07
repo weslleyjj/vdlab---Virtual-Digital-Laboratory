@@ -12,11 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class AgendamentoService {
@@ -30,8 +28,12 @@ public class AgendamentoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Agendamento> buscarAgendamentoByIdUsuario(Long id){
-        return agendamentoRepository.buscarAgendamentoByIdUsuario(id);
+    public Integer buscarAgendamentoByIdUsuario(Long id){
+        return agendamentoRepository.buscarAgendamentoByIdUsuario(id, LocalDateTime.now());
+    }
+
+    public Integer buscarAgendamentoEntrePeriodoUsuario(Long id){
+        return agendamentoRepository.buscarAgendamentoEntrePeriodoUsuario(id, LocalDateTime.now());
     }
 
     public Page<Agendamento> findPaginated(Pageable pageable, Usuario usuario) {

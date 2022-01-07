@@ -18,7 +18,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +28,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,6 +70,7 @@ public class FeedbackController {
     @Value("${fpga.quantidadePlacas}")
     private Integer quantidadePlacas;
 
+    // Variáveis de controle para manuseio das placas e cameras no sistema
     private HashMap<String, String> placasConectadas = new HashMap<>();
     private HashMap<String, Boolean> disponibilidadePlacas = new HashMap<>();
     private HashMap<String, Integer> camerasMonitoramento = new HashMap<>();
@@ -90,6 +89,7 @@ public class FeedbackController {
         this.usuarioRepository = usuarioRepository;
         encoder = new BCryptPasswordEncoder();
         getPlacasNoSistema();
+        resetarPlacasUsuarioInit();
     }
 
     @GetMapping("/controlador-fpga")
@@ -119,17 +119,18 @@ public class FeedbackController {
         String conversao = Integer.toBinaryString(comando);
         conversao = String.format("%22s", conversao).replace(' ', '0');
 
-        conversao += (ordemPlacas.get(dados.getPlacaDesejada()) + 1);
+        conversao += (ordemPlacas.get(dados.getPlacaDesejada()) + 1); // +1 devido ao tratamento efetuado dentro do .tcl
 
         socketOut.write(conversao.getBytes());
         socketOut.writeUTF("\n");
 
-        System.out.println(conversao);
     }
 
     @PostMapping(value = "/upload")
     public String uploadArquivoSof(@RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes redirectAttributes) throws IOException {
-        if(!isHorarioUsuarioValido(UsuarioUtil.getUsuarioLogado(principal, usuarioRepository))){
+        Usuario usrLogado = UsuarioUtil.getUsuarioLogado(principal, usuarioRepository);
+
+        if(!isHorarioUsuarioValido(usrLogado)){
             redirectAttributes.addFlashAttribute("message", "Você não possui agendamento neste horário.");
             return "redirect:/carregar";
         }
@@ -138,7 +139,15 @@ public class FeedbackController {
             return "redirect:/carregar";
         }
 
-        String codigoPlaca = getPlacaDisponivel();
+        atualizarPlacasNoSistema();
+
+        String codigoPlaca = null;
+
+        if(usrLogado.getCodigoPlaca() != null){
+            codigoPlaca = usrLogado.getCodigoPlaca();
+        } else {
+            codigoPlaca = getPlacaDisponivel();
+        }
 
         if(codigoPlaca == null){
             redirectAttributes.addFlashAttribute("message", "Todas as placas estão em uso no momento");
@@ -153,13 +162,16 @@ public class FeedbackController {
             Path targetLocation = path.resolve(fileName); // Caminho absoluto para acesso ao arquivo
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-
-
             String[] comandoProgramar = {scriptProgrammer, placasConectadas.get(codigoPlaca), "p;" + targetLocation};
 
             ScriptUtil.executaComandoShellArray(comandoProgramar);
 
             disponibilidadePlacas.put(codigoPlaca, false);
+            if(usrLogado.getCodigoPlaca() == null){
+                usrLogado.setCodigoPlaca(codigoPlaca);
+                usuarioRepository.save(usrLogado);
+            }
+
             return "redirect:/controlador-fpga?p="+ codigoPlaca;
 
         } catch (IOException e) {
@@ -197,6 +209,19 @@ public class FeedbackController {
         }catch (Exception e){
             System.out.println("Streaming iniciado");
         }
+    }
+
+    private void atualizarPlacasNoSistema(){
+        List<Usuario> usuariosComPlaca = usuarioRepository.findUsuariosComCodigoPlaca();
+        for (Usuario usuario : usuariosComPlaca) {
+            if(agendamentoService.buscarAgendamentoEntrePeriodoUsuario(usuario.getId()) == 0){
+                disponibilidadePlacas.put(usuario.getCodigoPlaca(), true);
+                usuario.setCodigoPlaca(null);
+
+                usuarioRepository.save(usuario);
+            }
+        }
+
     }
 
     private String getPlacaDisponivel(){
@@ -241,24 +266,16 @@ public class FeedbackController {
     }
 
     private boolean isHorarioUsuarioValido(Usuario usuario){
-        LocalDateTime dataAtual = LocalDateTime.now();
-        List<Agendamento> agendamentos = agendamentoService.buscarAgendamentoByIdUsuario(usuario.getId());
+        Integer agendamentos = agendamentoService.buscarAgendamentoByIdUsuario(usuario.getId());
+        return agendamentos > 0;
+    }
 
-        for (Agendamento agendamento : agendamentos) {
-            LocalDateTime dataExpirado = agendamento.getDataAgendada();
-            boolean isIndefinido = agendamento.getTempoSessao() == 0;
-            if(!isIndefinido){
-                dataExpirado.plusMinutes(agendamento.getTempoSessao());
-                if(agendamento.getDataAgendada().isBefore(dataAtual) && dataExpirado.isBefore(dataAtual)){
-                    return true;
-                }
-            }else{
-                if(agendamento.getDataAgendada().isBefore(dataAtual)){
-                    return true;
-                }
-            }
+    private void resetarPlacasUsuarioInit(){
+        try {
+            usuarioRepository.resetPlacasUsuarios();
+        } catch (Exception e){
+            logger.warn("Códigos de placa atribuido a usuarios resetado");
         }
-        return false;
     }
 
     @Data
