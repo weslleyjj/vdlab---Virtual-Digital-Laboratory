@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -93,7 +94,12 @@ public class FeedbackController {
     }
 
     @GetMapping("/controlador-fpga")
-    public ModelAndView feedback(@RequestParam("p") String codigoPlaca) throws InterruptedException, IOException {
+    public ModelAndView feedback(@RequestParam("p") String codigoPlaca, Principal principal) throws InterruptedException, IOException {
+
+        if(!isHorarioUsuarioValido(UsuarioUtil.getUsuarioLogado(principal, usuarioRepository))){
+            ModelAndView model = new ModelAndView("redirect:/");
+            return model;
+        }
 
         //startStream();
 
@@ -113,7 +119,11 @@ public class FeedbackController {
 
     @MessageMapping("/comando")
     @SendTo("/painel/comando")
-    public void fpgaCommand(DadosSocket dados) throws Exception {
+    public String fpgaCommand(DadosSocket dados, Principal principal) throws Exception {
+        if(!isHorarioUsuarioValido(UsuarioUtil.getUsuarioLogado(principal, usuarioRepository))){
+            return "EXPIRED";
+        }
+
         Integer comando = dados.getComandoInputs();
         //Conversão de número inteiro para binário
         String conversao = Integer.toBinaryString(comando);
@@ -124,6 +134,7 @@ public class FeedbackController {
         socketOut.write(conversao.getBytes());
         socketOut.writeUTF("\n");
 
+        return "OK";
     }
 
     @PostMapping(value = "/upload")

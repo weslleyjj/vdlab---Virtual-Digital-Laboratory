@@ -66,8 +66,19 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         // console.log('Connected: ' + frame);
-        stompClient.subscribe('/painel/comando', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        stompClient.subscribe('/painel/comando', function (msg) {
+            if(msg.body == 'EXPIRED'){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Tempo de sessão esgotado!',
+                    html: "<h5>Você será redirecionado para o início</h5>",
+                    showConfirmButton: false,
+                    timer: 3000
+                }).then(() => {
+                    window.location.href = "/"
+                })
+            }
+            // showGreeting(JSON.parse(greeting.body).content);
         });
     });
 }
