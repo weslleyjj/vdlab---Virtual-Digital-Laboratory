@@ -40,6 +40,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     @Query(value = "select count(a) from agendamento a left join usuarios u on u.id = a.usuario_id " +
             "where a.ativo = true " +
             "and u.id = ?1 " +
-            "and ?2 not between a.data_agendada and (a.data_agendada + (a.tempo_sessao * interval '1 minute'))", nativeQuery = true)
+            "and ?2 between a.data_agendada and (a.data_agendada + (a.tempo_sessao * interval '1 minute'))", nativeQuery = true)
     Integer buscarAgendamentoEntrePeriodoUsuario(Long idUsuario, LocalDateTime data);
 }

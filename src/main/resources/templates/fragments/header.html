@@ -26,7 +26,7 @@
                     <li sec:authorize="hasAnyAuthority('DOCENTE', 'ADMIN')" class="nav-item">
                         <a th:class="${pagina == 'agendamento'? 'nav-link active' : 'nav-link'}" href="/agendamento">Agendamentos</a>
                     </li>
-                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <li sec:authorize="hasAnyAuthority('DISCENTE')" class="nav-item">
                         <a th:class="${pagina == 'carregar'? 'nav-link active' : 'nav-link'}" href="/carregar">Carregar projeto</a>
                     </li>
                 </ul>

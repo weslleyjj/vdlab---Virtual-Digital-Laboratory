@@ -226,13 +226,31 @@ public class FeedbackController {
         List<Usuario> usuariosComPlaca = usuarioRepository.findUsuariosComCodigoPlaca();
         for (Usuario usuario : usuariosComPlaca) {
             if(agendamentoService.buscarAgendamentoEntrePeriodoUsuario(usuario.getId()) == 0){
-                disponibilidadePlacas.put(usuario.getCodigoPlaca(), true);
+                atualizarCodigoPlaca(usuario.getCodigoPlaca());
                 usuario.setCodigoPlaca(null);
 
                 usuarioRepository.save(usuario);
             }
         }
 
+    }
+
+    private void atualizarCodigoPlaca(String chave){
+        String nomePlaca = placasConectadas.get(chave);
+        String novaChave = gerarChavePlaca(nomePlaca);
+        Integer index = ordemPlacas.get(chave);
+
+        placasConectadas.remove(chave);
+        placasConectadas.put(novaChave, nomePlaca);
+
+        disponibilidadePlacas.remove(chave);
+        disponibilidadePlacas.put(novaChave, true);
+
+        camerasMonitoramento.remove(chave);
+        camerasMonitoramento.put(novaChave, index);
+
+        ordemPlacas.remove(chave);
+        ordemPlacas.put(novaChave, index);
     }
 
     private String getPlacaDisponivel(){
@@ -263,17 +281,23 @@ public class FeedbackController {
         Integer index = 0;
         for (String s : resultShell) {
             if(s.contains("USB")){
-                String chaveAcessoPlaca = encoder.encode(s);
-                chaveAcessoPlaca = Base64.getEncoder().withoutPadding().encodeToString(chaveAcessoPlaca.getBytes());
+                String chaveAcessoPlaca = gerarChavePlaca(s);
 
                 placasConectadas.put(chaveAcessoPlaca, s);
                 disponibilidadePlacas.put(chaveAcessoPlaca, true);
                 camerasMonitoramento.put(chaveAcessoPlaca, index);
                 ordemPlacas.put(chaveAcessoPlaca, index);
                 index++;
-//                placasConectadas.add(s);
             }
         }
+    }
+
+    private String gerarChavePlaca(String codigoPlaca){
+        String chaveAcessoPlaca = encoder.encode(codigoPlaca);
+        String parteString = chaveAcessoPlaca.substring(chaveAcessoPlaca.length()/2);
+        parteString = encoder.encode(parteString);
+        parteString = parteString.substring(chaveAcessoPlaca.length()/2);
+        return Base64.getEncoder().withoutPadding().encodeToString(parteString.getBytes());
     }
 
     private boolean isHorarioUsuarioValido(Usuario usuario){

@@ -148,10 +148,11 @@ public class AgendamentoController {
         agendamento.setAtivo(true);
         repository.save(agendamento);
 
+        Usuario u = usuarioRepository.findById(agendamento.getUsuario().getId()).get();
         new Thread(){
             @Override
             public void run() {
-                emailUtil.newAgendamentoSendMail(agendamento.getDataAgendada(), agendamento.getUsuario().getNome(), agendamento.getUsuario().getEmail());
+                emailUtil.newAgendamentoSendMail(agendamento.getDataAgendada(), u.getNome(), u.getEmail());
             }
         }.start();
 
