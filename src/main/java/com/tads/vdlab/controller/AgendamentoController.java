@@ -10,11 +10,13 @@ import com.tads.vdlab.repository.AgendamentoRepository;
 import com.tads.vdlab.repository.RoleRepository;
 import com.tads.vdlab.repository.UsuarioRepository;
 import com.tads.vdlab.service.UsuarioService;
+import com.tads.vdlab.util.EmailUtil;
 import com.tads.vdlab.util.UsuarioUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,12 +42,14 @@ public class AgendamentoController {
     private AgendamentoRepository repository;
     private UsuarioRepository usuarioRepository;
     private UsuarioService usuarioService;
+    private EmailUtil emailUtil;
 
     @Autowired
-    public AgendamentoController(AgendamentoRepository agendamentoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService){
+    public AgendamentoController(JavaMailSender mailSender, AgendamentoRepository agendamentoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService){
         this.repository = agendamentoRepository;
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
+        emailUtil = new EmailUtil(mailSender);
     }
 
     @GetMapping
@@ -143,6 +147,13 @@ public class AgendamentoController {
 
         agendamento.setAtivo(true);
         repository.save(agendamento);
+
+        new Thread(){
+            @Override
+            public void run() {
+                emailUtil.newAgendamentoSendMail(agendamento.getDataAgendada(), agendamento.getUsuario().getNome(), agendamento.getUsuario().getEmail());
+            }
+        }.start();
 
         redirectAttributes.addFlashAttribute("operacaoSucesso", true);
         return "redirect:/agendamento";

@@ -9,9 +9,12 @@ import com.tads.vdlab.model.Usuario;
 import com.tads.vdlab.repository.RoleRepository;
 import com.tads.vdlab.repository.UsuarioRepository;
 import com.tads.vdlab.service.UsuarioService;
+import com.tads.vdlab.util.EmailUtil;
 import com.tads.vdlab.util.UsuarioUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +36,12 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder crypt;
+    private EmailUtil emailUtil;
 
-    public UsuarioController(UsuarioRepository usuarioRepository, UsuarioService usuarioService, RoleRepository roleRepository){
+    @Autowired
+    public UsuarioController(JavaMailSender mailSender, UsuarioRepository usuarioRepository, UsuarioService usuarioService, RoleRepository roleRepository){
         crypt = new BCryptPasswordEncoder();
+        emailUtil = new EmailUtil(mailSender);
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.roleRepository = roleRepository;
@@ -68,6 +74,13 @@ public class UsuarioController {
         usuario.setAtivo(true);
 
         usuario.setSenha(crypt.encode(usuario.getSenha()));
+
+        new Thread(){
+            @Override
+            public void run() {
+                emailUtil.newUserSendMail(usuario.getLogin(), usuario.getNome(),usuario.getEmail());
+            }
+        }.start();
 
         usuarioRepository.save(usuario);
 
