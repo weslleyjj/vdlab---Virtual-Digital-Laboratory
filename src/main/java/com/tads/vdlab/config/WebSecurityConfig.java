@@ -65,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(staticResources).permitAll()
                 .antMatchers("/usuario/cadastrar").permitAll()
+                .antMatchers("/usuario/recuperar-senha").permitAll()
+                .antMatchers("/usuario/enviar-email-senha").permitAll()
                 .antMatchers("/usuario/permissoes").hasAnyAuthority("ADMIN")
                 .antMatchers("/usuario/editarPermissaoUsuario").hasAnyAuthority("ADMIN")
                 .antMatchers("/usuario/buscaUsuario").hasAnyAuthority("ADMIN")

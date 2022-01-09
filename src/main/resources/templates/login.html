@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="/images/favicon.ico"/>
     <script src="/libs/jquery.min.js" rel="script" type="text/javascript"></script>
+    <script src="/libs/sweetalert2.all.min.js" rel="script"></script>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:500);
 
@@ -148,6 +149,8 @@
 <body >
 <div style="background-color: rgba(0, 0, 0, 0.5); height: 100vh">
     <div class="login-page">
+        <p th:if="${recuperarSucesso}" style="display: none" id="recuperar-sucesso"></p>
+        <p th:if="${cadastrarSucesso}" style="display: none" id="cadastrar-sucesso"></p>
         <div class="form">
             <h1><strong>Virtual Digital Laboratory</strong></h1>
             <div>
@@ -173,9 +176,32 @@
 
 </body>
 <script>
+    $(document).ready(() => {
+        console.log($("#recuperar-sucesso"))
+        if($("#recuperar-sucesso").length > 0){
+            Swal.fire({
+                icon: 'success',
+                title: 'Senha recuperada!',
+                html: '<p>Verifique seu email para mais informações.</p>',
+                showConfirmButton: true,
+            })
+        }
+
+        console.log($("#cadastrar-sucesso"))
+        if($("#cadastrar-sucesso").length > 0){
+            Swal.fire({
+                icon: 'success',
+                title: 'Cadastro realizado com sucesso!',
+                html: '<p>Verifique seu email para mais informações.</p>',
+                showConfirmButton: true,
+            })
+        }
+    })
 
     $('.message a').click(function(){
         $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
     });
+
+
 </script>
 </html>

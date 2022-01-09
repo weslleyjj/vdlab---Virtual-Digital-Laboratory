@@ -1,9 +1,6 @@
 package com.tads.vdlab.controller;
 
-import com.tads.vdlab.controller.dto.AgendamentoDTO;
 import com.tads.vdlab.controller.dto.UsuarioDTO;
-import com.tads.vdlab.controller.validator.AgendamentoValidator;
-import com.tads.vdlab.model.Agendamento;
 import com.tads.vdlab.model.Role;
 import com.tads.vdlab.model.Usuario;
 import com.tads.vdlab.repository.RoleRepository;
@@ -84,7 +81,8 @@ public class UsuarioController {
 
         usuarioRepository.save(usuario);
 
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("cadastrarSucesso", true);
+        return "redirect:/login";
     }
 
     @GetMapping("/editar")
@@ -233,6 +231,45 @@ public class UsuarioController {
 
         redirectAttributes.addFlashAttribute("operacaoSucesso", true);
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/recuperar-senha")
+    public String getEmailUsuario(Model model) {
+        model.addAttribute("usuario", new Usuario());
+
+        model.addAttribute("message", model.getAttribute("message"));
+
+        return "recoverPassword";
+    }
+
+    @PostMapping(value = "/enviar-email-senha")
+    public String enviarEmail(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
+        Usuario user = usuarioRepository.getUsuarioByEmail(usuario.getEmail());
+
+        if(user != null){
+            Random rnd = new Random();
+            String novaSenha = String.format("%06d", rnd.nextInt(999999));
+            novaSenha = Base64.getEncoder().encodeToString(novaSenha.getBytes());
+            user.setSenha(crypt.encode(novaSenha));
+            usuarioRepository.save(user);
+
+            String finalNovaSenha = novaSenha;
+            new Thread(){
+                @Override
+                public void run() {
+                    emailUtil.sendMail(user.getNome(), finalNovaSenha, user.getEmail());
+                }
+            }.start();
+
+        } else {
+            List<String> erros = new ArrayList<>();
+            erros.add("Não foi encontrado nenhum usuário com esse email.");
+            redirectAttributes.addFlashAttribute("message", erros);
+            return "redirect:/usuario/recuperar-senha";
+        }
+
+        redirectAttributes.addFlashAttribute("recuperarSucesso", true);
+        return "redirect:/login";
     }
 
     private List<String> validarUsuario(Usuario usuario, boolean editar) {

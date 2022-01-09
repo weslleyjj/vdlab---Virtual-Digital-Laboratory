@@ -24,7 +24,7 @@ public class EmailUtil {
 
             MimeMessageHelper helper = new MimeMessageHelper( mail );
             helper.setTo(emailParaEnvio);
-            helper.setSubject( "QueijoSoft Troca de Senha" );
+            helper.setSubject( "VDLAB - Troca de Senha" );
             helper.setText(createMessage(novaSenha, nomeUsuario), true);
             mailSender.send(mail);
 
@@ -68,11 +68,11 @@ public class EmailUtil {
     private String createMessage(String novaSenha, String nomeUsuario){
         return "<!DOCTYPE html>\n" +
                 "  <body>\n" +
-                "    <h3>Olá "+nomeUsuario+" =D</h3>\n" +
+                "    <h3>Olá "+nomeUsuario+".</h3>\n" +
                 "    <h4>Foi gerada uma nova senha aleatória para o seu usuário:</h4>\n" +
                 "    <p>"+novaSenha+"</p>\n" +
                 "    <h4>Atualize a senha assim que fizer o login!</h4>\n" +
-                "    <h4>A equipe QueijoSoft agradece!</h4>\n" +
+                "    <h4>A equipe VDLAB agradece!</h4>\n" +
                 "  </body>\n" +
                 "</html>";
     }
