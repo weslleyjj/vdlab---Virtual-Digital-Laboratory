@@ -74,7 +74,7 @@ public class UsuarioService {
 
     public List<UsuarioDTO> findAllUsuariosDiscentes(){
         Role roleParaAgendar = roleRepository.findByName("DISCENTE");
-        return usuarioRepository.findByRolesIsAndAtivoOOrderByNome(roleParaAgendar, true)
+        return usuarioRepository.findByRolesIsAndAtivoOrderByNome(roleParaAgendar, true)
                 .stream().map(UsuarioDTO::toDTO).collect(Collectors.toList());
     }
 

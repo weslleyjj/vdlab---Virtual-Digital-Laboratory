@@ -29,7 +29,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByAtivo(Boolean ativo);
 
-    List<Usuario> findByRolesIsAndAtivoOOrderByNome(Role role, Boolean ativo);
+    List<Usuario> findByRolesIsAndAtivoOrderByNome(Role role, Boolean ativo);
 
     Usuario getByLoginEqualsAndAtivo(String login, Boolean ativo);
 
